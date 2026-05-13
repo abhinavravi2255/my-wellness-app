@@ -49,10 +49,15 @@ export default function RootLayout({
                   document.documentElement.classList.remove('dark');
                   localStorage.setItem('theme', 'light');
                 }
-                if (localStorage.getItem('color-theme') === 'blue') {
+                const colorTheme = localStorage.getItem('color-theme');
+                if (colorTheme === 'blue') {
                   document.documentElement.classList.add('theme-blue');
-                } else {
+                  document.documentElement.classList.remove('theme-violet');
+                } else if (colorTheme === 'violet') {
+                  document.documentElement.classList.add('theme-violet');
                   document.documentElement.classList.remove('theme-blue');
+                } else {
+                  document.documentElement.classList.remove('theme-blue', 'theme-violet');
                   localStorage.setItem('color-theme', 'emerald');
                 }
               } catch (_) {}

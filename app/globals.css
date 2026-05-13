@@ -99,6 +99,42 @@ html.dark.theme-blue {
   --glass-strong-bg: rgba(10, 22, 40, 0.9);
 }
 
+/* VIOLET THEME OVERRIDES */
+html.theme-violet {
+  --primary: #7C3AED;
+  --primary-dark: #5B21B6;
+  --primary-light: #A78BFA;
+  --accent: #F59E0B;
+  --accent-glow: rgba(245, 158, 11, 0.3);
+  --primary-glow: rgba(124, 58, 237, 0.2);
+  --grid-line: rgba(124, 58, 237, 0.05);
+  --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+  --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.1);
+  --border-active: rgba(124, 58, 237, 0.4);
+}
+
+html.dark.theme-violet {
+  --background: #0A0514;
+  --foreground: #EFE8FA;
+  --primary: #8B5CF6;
+  --primary-dark: #7C3AED;
+  --primary-light: #C4B5FD;
+  --accent: #FCD34D;
+  --accent-glow: rgba(252, 211, 77, 0.3);
+  --primary-glow: rgba(139, 92, 246, 0.3);
+  --grid-line: rgba(139, 92, 246, 0.05);
+  --surface: #120A24;
+  --surface-2: #1B1036;
+  --surface-3: #26164A;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(139, 92, 246, 0.5);
+  --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  --gradient-surface: linear-gradient(135deg, #120A24 0%, #1B1036 100%);
+  --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.2);
+  --glass-bg: rgba(18, 10, 36, 0.6);
+  --glass-strong-bg: rgba(18, 10, 36, 0.9);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
