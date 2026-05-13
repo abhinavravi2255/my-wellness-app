@@ -258,21 +258,6 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }} className="desktop-nav">
           <ThemeToggle />
           <ColorToggle />
-          <a
-            href="tel:+919876543210"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              color: "var(--text-secondary)",
-              fontSize: "14px",
-              fontWeight: 600,
-              textDecoration: "none",
-            }}
-          >
-            <Phone size={14} />
-            +91 98765 43210
-          </a>
           <MagneticButton>
             <a href="#contact" className="btn-primary" style={{ fontSize: "13px", padding: "9px 20px" }}>
               Get in Touch
