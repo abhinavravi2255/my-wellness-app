@@ -12,15 +12,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TallyPro Solutions — Tally Certified 5-Star Partner | TallyPrime Sales & Support Kerala",
+  title: "TallyPro Solutions — Tally Certified 5-Star Partner | TallyPrime Sales & Support India",
   description:
-    "Premier Tally Certified 5-Star Partner offering TallyPrime Silver, Gold, Server, Customization, Training, and AMC Support in Kerala. 2000+ satisfied clients, 15+ years experience.",
+    "Premier Tally Certified 5-Star Partner offering TallyPrime Silver, Gold, Server, Customization, Training, and AMC Support in India. 2000+ satisfied clients, 15+ years experience.",
   keywords:
-    "TallyPrime, Tally Partner Kerala, TallyPrime customization, Tally support, GST software, accounting software India, TallyPrime Silver Gold Server",
+    "TallyPrime, Tally Partner India, TallyPrime customization, Tally support, GST software, accounting software India, TallyPrime Silver Gold Server",
   authors: [{ name: "TallyPro Solutions" }],
   openGraph: {
     title: "TallyPro Solutions — Tally Certified 5-Star Partner",
-    description: "2000+ businesses trust us for TallyPrime sales, support, and customization in Kerala.",
+    description: "2000+ businesses trust us for TallyPrime sales, support, and customization in India.",
     type: "website",
   },
 };

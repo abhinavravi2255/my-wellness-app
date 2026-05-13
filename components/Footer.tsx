@@ -75,9 +75,9 @@ export default function Footer() {
               Get in Touch Today
               <ArrowRight size={16} />
             </a>
-            <a href="tel:+919847482559" className="btn-outline">
-              <Phone size={14} />
-              Call +91 98474 82559
+            <a href="tel:+919876543210" className="btn-outline">
+              <Phone size={18} />
+              Call +91 98765 43210
             </a>
           </div>
         </div>
@@ -106,17 +106,19 @@ export default function Footer() {
 
             <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "24px" }}>
               Premier Tally Certified 5-Star Partner since 2008. Empowering 2000+ businesses
-              across Kerala with cutting-edge TallyPrime solutions.
+              across India with cutting-edge TallyPrime solutions.
             </p>
 
             {/* Contact info */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
-              <a
-                href="tel:+919847482559"
-                style={{ display: "flex", gap: "8px", alignItems: "center", textDecoration: "none" }}
+              <a 
+                href="tel:+919876543210"
+                style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}
               >
-                <Phone size={14} style={{ color: "var(--primary-light)" }} />
-                <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>+91 98474 82559</span>
+                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--primary)" }}>
+                  <Phone size={16} />
+                </div>
+                <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>+91 98765 43210</span>
               </a>
               <a
                 href="mailto:sales@tallypro.in"
@@ -128,7 +130,7 @@ export default function Footer() {
               <div style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
                 <MapPin size={14} style={{ color: "var(--primary-light)", marginTop: "2px", flexShrink: 0 }} />
                 <span style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  43/1500, 2nd Floor, Palarivattom, Ernakulam, Kerala 682025
+                  123 Tech Park, Innovation Hub, Bangalore, Karnataka 560001
                 </span>
               </div>
             </div>

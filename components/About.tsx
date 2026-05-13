@@ -10,7 +10,7 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 const achievements = [
   { icon: Award, label: "5-Star Certified Partner", desc: "Highest Tally certification level", color: "#FFC107" },
-  { icon: Users, label: "2000+ Happy Clients", desc: "Across Kerala & beyond", color: "#0066FF" },
+  { icon: Users, label: "2000+ Happy Clients", desc: "Across India & beyond", color: "#0066FF" },
   { icon: Calendar, label: "15+ Years Experience", desc: "Established in 2008", color: "#00D4FF" },
   { icon: MapPin, label: "Pan-India Service", desc: "Remote & onsite support", color: "#22C55E" },
 ];
@@ -93,7 +93,7 @@ export default function About() {
               15+ Years of <span className="text-gradient">Tally Expertise</span> Serving India's Businesses
             </h2>
             <p className="about-content-item" style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
-              TallyPro Solutions is a premier Tally Certified 5-Star Partner established in 2008. We've evolved into a trailblazer in TallyPrime software sales, service, and customization with a proven track record of 2000+ satisfied customers across Kerala and beyond.
+              TallyPro Solutions is a premier Tally Certified 5-Star Partner established in 2008. We've evolved into a trailblazer in TallyPrime software sales, service, and customization with a proven track record of 2000+ satisfied customers across India and beyond.
             </p>
             <p className="about-content-item" style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "32px" }}>
               Our team of highly qualified, Tally-certified IT professionals brings diverse expertise to address every business challenge. We leverage technology, services, and talent to consistently empower clients to enhance productivity and reduce operational costs.

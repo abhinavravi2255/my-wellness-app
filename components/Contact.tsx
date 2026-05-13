@@ -40,7 +40,7 @@ export default function Contact() {
   const contactInfo = [
     { icon: Phone, label: "Phone / WhatsApp", value: "+91 9876543210", sub: "+91 9876543210", href: "tel:+919876543210", color: "#22C55E" },
     { icon: Mail, label: "Email", value: "sales@tallypro.in", sub: "support@tallypro.in", href: "mailto:sales@tallypro.in", color: "#0066FF" },
-    { icon: MapPin, label: "Office Address", value: "00/1500, 2nd Floor, palarivattam ", sub: "Ernakulam, Kerala - 682025", href: "#", color: "#EC4899" },
+    { icon: MapPin, label: "Office Address", value: "123 Tech Park, Innovation Hub", sub: "Bangalore, Karnataka - 560001", href: "#", color: "#EC4899" },
     { icon: Clock, label: "Working Hours", value: "Mon - Sat: 9:30 AM - 6:00 PM", sub: "Sunday: Closed", href: "#", color: "#F59E0B" },
   ];
 

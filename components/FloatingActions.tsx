@@ -52,7 +52,7 @@ export default function FloatingActions() {
       {/* WhatsApp floating button */}
       <a
         ref={whatsappRef}
-        href="https://wa.me/919847482559?text=Hi!%20I%20want%20to%20know%20more%20about%20TallyPrime%20solutions."
+        href="https://wa.me/919876543210?text=Hi!%20I%20want%20to%20know%20more%20about%20TallyPrime%20solutions."
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -117,7 +117,7 @@ export default function FloatingActions() {
 
       {/* Call button (mobile only) */}
       <a
-        href="tel:+919847482559"
+        href="tel:+919876543210"
         className="md:hidden"
         style={{
           position: "fixed",

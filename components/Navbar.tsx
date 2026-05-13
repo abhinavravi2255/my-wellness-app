@@ -108,8 +108,8 @@ export default function Navbar() {
 
           {/* Right side */}
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <a href="tel:+919847482559" style={{ display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity="0.8"} onMouseLeave={e => e.currentTarget.style.opacity="1"}>
-              <Phone size={12} /> +91 98474 82559
+            <a href="tel:+919876543210" style={{ display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity="0.8"} onMouseLeave={e => e.currentTarget.style.opacity="1"}>
+              <Phone size={12} /> +91 98765 43210
             </a>
             <div style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.3)" }} />
             {/* <a href="#contact" style={{ display: "flex", alignItems: "center", gap: "6px", color: "#FFAB00", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e => e.currentTarget.style.transform="scale(1)"}>
@@ -259,7 +259,7 @@ export default function Navbar() {
           <ThemeToggle />
           <ColorToggle />
           <a
-            href="tel:+919847482559"
+            href="tel:+919876543210"
             style={{
               display: "flex",
               alignItems: "center",
@@ -271,7 +271,7 @@ export default function Navbar() {
             }}
           >
             <Phone size={14} />
-            +91 98474 82559
+            +91 98765 43210
           </a>
           <MagneticButton>
             <a href="#contact" className="btn-primary" style={{ fontSize: "13px", padding: "9px 20px" }}>

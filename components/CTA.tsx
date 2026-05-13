@@ -50,7 +50,7 @@ export default function CTA() {
             </a>
           </MagneticButton>
           <MagneticButton>
-            <a href="tel:+919847482559" className="btn-outline" style={{ fontSize: "16px", padding: "14px 32px" }}>
+            <a href="tel:+919876543210" className="btn-outline" style={{ fontSize: "16px", padding: "14px 32px" }}>
               Call Us Now <ArrowRight size={16} />
             </a>
           </MagneticButton>
