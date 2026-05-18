@@ -1,9 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Products from "@/components/Products";
 import Services from "@/components/Services";
-import Industries from "@/components/Industries";
 import About from "@/components/About";
+import Products from "@/components/Products";
+import Industries from "@/components/Industries";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Contact from "@/components/Contact";
@@ -15,11 +15,11 @@ export default function Home() {
     <main style={{ flex: 1 }}>
       <Navbar />
       <Hero />
-      <Products />
-      <Services />
-      <Industries />
       <About />
+      <Services />
+      <Products />
       <Testimonials />
+      <Industries />
       <CTA />
       <Contact />
       <Footer />

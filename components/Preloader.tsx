@@ -1,107 +1,85 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import Logo from "./Logo";
+import { Globe } from "lucide-react";
 
 export default function Preloader() {
-  const [isLoading, setIsLoading] = useState(true);
+  const preloaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Lock scroll during preloader
+    const el = preloaderRef.current;
+    if (!el) return;
+
+    const tl = gsap.timeline();
+
+    // Leaf spin & pulse
+    tl.fromTo(".preloader-icon", 
+      { scale: 0.5, opacity: 0, rotate: -45 },
+      { scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: "back.out(1.5)" }
+    )
+    .to(".preloader-icon", { scale: 1.1, repeat: 1, yoyo: true, duration: 0.4 }, "-=0.2")
+    // Text stagger reveal
+    .fromTo(".preloader-text span", 
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power3.out" }, "-=0.6"
+    )
+    // Curtains wipe up
+    .to(".preloader-content", { y: -30, opacity: 0, duration: 0.5, ease: "power3.in", delay: 0.8 })
+    .to(".preloader-bg", { height: 0, duration: 0.8, ease: "power4.inOut", stagger: 0.1 }, "-=0.2")
+    .set(el, { display: "none" });
+
     document.body.style.overflow = "hidden";
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setIsLoading(false);
-        document.body.style.overflow = "auto";
-      }
+    tl.eventCallback("onComplete", () => {
+      document.body.style.overflow = "";
     });
 
-    // 1. Initial state for logo parts
-    gsap.set(".preloader-logo .logo-path-1", { x: -20, opacity: 0 });
-    gsap.set(".preloader-logo .logo-path-2", { x: 20, opacity: 0 });
-    gsap.set(".preloader-logo .logo-path-3", { y: 20, opacity: 0 });
-    gsap.set(".preloader-text", { y: 20, opacity: 0 });
-
-    // 2. Animate logo parts coming together
-    tl.to(".preloader-logo .logo-path", {
-      x: 0,
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: "back.out(1.5)"
-    })
-    // 3. Text fades in
-    .to(".preloader-text", {
-      y: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: "power2.out"
-    }, "-=0.4")
-    // 4. Hold for a moment to let user see it
-    .to({}, { duration: 0.6 })
-    // 5. Scale up slightly and fade out
-    .to(".preloader-content", {
-      scale: 1.05,
-      opacity: 0,
-      duration: 0.4,
-      ease: "power2.in"
-    })
-    // 6. Slide entire preloader screen up
-    .to(".preloader-wrapper", {
-      yPercent: -100,
-      duration: 0.8,
-      ease: "power3.inOut"
-    });
-
-    return () => {
-      document.body.style.overflow = "auto";
-      tl.kill();
-    };
+    return () => { tl.kill(); document.body.style.overflow = ""; };
   }, []);
 
-  if (!isLoading) return null;
-
   return (
-    <div 
-      className="preloader-wrapper"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        background: "var(--background)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div 
-        className="preloader-content"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "24px"
-        }}
-      >
-        <div className="preloader-logo">
-          <Logo size={80} />
+    <div ref={preloaderRef} style={{
+      position: "fixed", inset: 0, zIndex: 9999,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+    }}>
+      {/* Wipe background panels */}
+      <div className="preloader-bg" style={{ position: "absolute", top: 0, left: 0, width: "33.333%", height: "100%", background: "var(--background)", zIndex: 1 }} />
+      <div className="preloader-bg" style={{ position: "absolute", top: 0, left: "33.333%", width: "33.334%", height: "100%", background: "var(--background)", zIndex: 1 }} />
+      <div className="preloader-bg" style={{ position: "absolute", top: 0, left: "66.667%", width: "33.333%", height: "100%", background: "var(--background)", zIndex: 1 }} />
+
+      <div className="preloader-content" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", position: "relative", zIndex: 2 }}>
+        <div className="preloader-icon" style={{
+          width: "80px", height: "80px", borderRadius: "24px",
+          background: "var(--gradient-primary)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "var(--shadow-glow)",
+        }}>
+          <Globe size={36} style={{ color: "white" }} />
         </div>
-        <div 
-          className="preloader-text"
-          style={{
-            fontSize: "28px",
-            fontWeight: 800,
-            letterSpacing: "-0.03em",
+
+        <div className="preloader-text" style={{ textAlign: "center" }}>
+          <div style={{
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "32px", fontWeight: 700,
             color: "var(--text-primary)",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px"
-          }}
-        >
-          TallyPro <span style={{ color: "var(--primary)" }}>Solutions</span>
+            letterSpacing: "-0.02em",
+            marginBottom: "6px",
+            display: "flex", gap: "6px", justifyContent: "center"
+          }}>
+            <span>Mission</span><span>444</span><span>Wellness</span><span>World</span>
+          </div>
+          <div style={{ display: "flex", gap: "4px", justifyContent: "center" }}>
+            <span style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              International
+            </span>
+            <span style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              Lifestyle
+            </span>
+            <span style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              Trainer
+            </span>
+          </div>
         </div>
       </div>
     </div>

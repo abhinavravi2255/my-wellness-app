@@ -3,57 +3,132 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Zap, ArrowRight, Gift } from "lucide-react";
-import MagneticButton from "./MagneticButton";
+import { ArrowRight, Leaf } from "lucide-react";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function CTA() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(".cta-content", { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: sectionRef.current, start: "top 80%" } }
+      gsap.fromTo(".cta-content",
+        { y: 60, opacity: 0, scale: 0.97 },
+        { y: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out",
+          scrollTrigger: { trigger: ".cta-content", start: "top 80%" } }
       );
-      gsap.to(".cta-glow", {
-        scale: 1.25, opacity: 0.5, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut",
-      });
-    }, sectionRef);
+
+      // Pulse orbs
+      gsap.to(".cta-orb-1", { scale: 1.2, opacity: 0.8, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.to(".cta-orb-2", { scale: 1.15, opacity: 0.6, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+    }, ctaRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "80px 24px", position: "relative", overflow: "hidden", background: "var(--surface)" }}>
-      <div className="cta-glow orb orb-primary" style={{ width: "700px", height: "700px", top: "50%", left: "50%", transform: "translate(-50%,-50%)", opacity: 0.25 }} />
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px)", backgroundSize: "50px 50px" }} />
+    <section ref={ctaRef} id="cta" style={{
+      position: "relative", overflow: "hidden",
+      padding: "100px 0",
+    }}>
+      {/* Background gradient */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "var(--gradient-primary)",
+      }} />
 
-      <div className="cta-content" style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--accent-glow)", border: "1px solid var(--accent)", borderRadius: "100px", padding: "8px 18px", marginBottom: "28px", fontSize: "13px", fontWeight: 700, color: "var(--accent)" }}>
-          <Gift size={14} /> Limited Time Offer — Free Implementation Worth ₹15,000
-        </div>
-        <h2 style={{ fontSize: "clamp(30px,5vw,56px)", fontWeight: 900, lineHeight: 1.1, marginBottom: "20px" }}>
-          Transform Your Business with<br /><span className="text-gradient">TallyPrime Today</span>
-        </h2>
-        <p style={{ fontSize: "18px", color: "var(--text-secondary)", maxWidth: "600px", margin: "0 auto 40px", lineHeight: 1.7 }}>
-          Get started with India's #1 business software. Free consultation, free implementation, and a dedicated support team that actually picks up the phone.
-        </p>
-        <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginBottom: "40px" }}>
-          {["✓ Free Implementation", "✓ Free Data Migration", "✓ 24/7 Support", "✓ No-Cost EMI Available", "✓ GST Ready"].map(f => (
-            <span key={f} style={{ background: "var(--primary-glow)", border: "1px solid var(--border-active)", borderRadius: "100px", padding: "6px 14px", fontSize: "13px", color: "var(--primary-light)", fontWeight: 600 }}>{f}</span>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-          <MagneticButton>
-            <a href="#contact" className="btn-primary" style={{ fontSize: "16px", padding: "14px 32px" }}>
-              <Zap size={18} /> Get in Touch Now
+      {/* Decorative orbs */}
+      <div className="cta-orb-1" style={{
+        position: "absolute", width: "600px", height: "600px",
+        borderRadius: "50%", background: "rgba(255,255,255,0.05)",
+        top: "-200px", left: "-150px", pointerEvents: "none",
+      }} />
+      <div className="cta-orb-2" style={{
+        position: "absolute", width: "400px", height: "400px",
+        borderRadius: "50%", background: "rgba(255,255,255,0.06)",
+        bottom: "-100px", right: "-100px", pointerEvents: "none",
+      }} />
+
+      {/* Pattern overlay */}
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
+        pointerEvents: "none",
+      }} />
+
+      <div className="container" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
+        <div className="cta-content">
+          {/* Icon */}
+          <div style={{
+            width: "72px", height: "72px", borderRadius: "50%",
+            background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            margin: "0 auto 28px",
+            backdropFilter: "blur(10px)",
+          }}>
+            <Leaf size={28} style={{ color: "white" }} />
+          </div>
+
+          <h2 className="font-display" style={{
+            fontSize: "clamp(38px, 5vw, 68px)", fontWeight: 700,
+            color: "white", lineHeight: 1.08,
+            letterSpacing: "-0.02em", marginBottom: "24px",
+          }}>
+            Ready to Begin Your<br />Wellness Journey?
+          </h2>
+
+          <p style={{
+            fontSize: "18px", color: "rgba(255,255,255,0.82)", lineHeight: 1.7,
+            maxWidth: "560px", margin: "0 auto 44px",
+          }}>
+            Take the first step toward your healthiest, most vibrant self. Book a complimentary discovery call with Asuhar B today — zero pressure, 100% value.
+          </p>
+
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="#contact" style={{
+              display: "inline-flex", alignItems: "center", gap: "10px",
+              background: "white", color: "var(--primary-dark)",
+              padding: "16px 36px", borderRadius: "100px",
+              fontWeight: 700, fontSize: "16px",
+              transition: "all 0.3s ease", textDecoration: "none",
+              boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+            }}
+              onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-3px)")}
+              onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
+            >
+              Book Free Discovery Call <ArrowRight size={18} />
             </a>
-          </MagneticButton>
-          <MagneticButton>
-            <a href="tel:+919876543210" className="btn-outline" style={{ fontSize: "16px", padding: "14px 32px" }}>
-              Call Us Now <ArrowRight size={16} />
+            <a href="#services" style={{
+              display: "inline-flex", alignItems: "center", gap: "10px",
+              background: "rgba(255,255,255,0.12)", color: "white",
+              padding: "16px 36px", borderRadius: "100px",
+              fontWeight: 600, fontSize: "16px",
+              border: "1.5px solid rgba(255,255,255,0.3)",
+              transition: "all 0.3s ease", textDecoration: "none",
+              backdropFilter: "blur(10px)",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              View All Programs
             </a>
-          </MagneticButton>
+          </div>
+
+          {/* Social proof */}
+          <div style={{ marginTop: "52px", display: "flex", alignItems: "center", justifyContent: "center", gap: "32px", flexWrap: "wrap" }}>
+            {[
+              { value: "500+", label: "Clients Transformed" },
+              { value: "4.9★", label: "Average Rating" },
+              { value: "100%", label: "Satisfaction Guaranteed" },
+            ].map((item, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "24px", fontWeight: 700, color: "white", fontFamily: "var(--font-cormorant), Georgia, serif" }}>{item.value}</div>
+                <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", marginTop: "2px" }}>{item.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

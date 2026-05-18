@@ -2,144 +2,340 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ArrowUp, Phone } from "lucide-react";
+import { ChevronsUp, Phone, Bot } from "lucide-react";
 
+/* ── AI Bot Icon ── */
+const AIChatIcon = () => (
+  <Bot size={26} style={{ color: "white" }} strokeWidth={1.5} />
+);
+
+/* ── Chat Bubble that expands on click ── */
+function AIChatBubble({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const [inputVal, setInputVal] = useState("");
+  const [messages, setMessages] = useState([
+    { from: "bot", text: "Hi! 👋 I'm Asuhar's wellness assistant. How can I help you today?" },
+  ]);
+  const [typing, setTyping] = useState(false);
+
+  useEffect(() => {
+    if (bubbleRef.current) {
+      if (open) {
+        gsap.fromTo(bubbleRef.current,
+          { scale: 0.7, opacity: 0, transformOrigin: "bottom right" },
+          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.8)" }
+        );
+      } else {
+        gsap.to(bubbleRef.current,
+          { scale: 0.7, opacity: 0, duration: 0.25, ease: "power2.in", transformOrigin: "bottom right" }
+        );
+      }
+    }
+  }, [open]);
+
+  const botReplies = [
+    "I'd love to help you start your wellness journey! 🌿 Would you like to book a free discovery call?",
+    "Asuhar offers personalised coaching programs for mind, body & nutrition. Which area interests you most?",
+    "Great question! You can reach Asuhar directly at hello@asuharb.com or use the contact form below.",
+    "Transforming your lifestyle starts with one small step. Let's find the right program for you! ✨",
+  ];
+
+  const sendMessage = () => {
+    if (!inputVal.trim()) return;
+    const userMsg = inputVal.trim();
+    setInputVal("");
+    setMessages(prev => [...prev, { from: "user", text: userMsg }]);
+    setTyping(true);
+    setTimeout(() => {
+      const reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+      setMessages(prev => [...prev, { from: "bot", text: reply }]);
+      setTyping(false);
+    }, 1200);
+  };
+
+  if (!open) return null;
+
+  return (
+    <div ref={bubbleRef} style={{
+      position: "fixed", bottom: "92px", right: "24px",
+      width: "320px", background: "var(--surface)",
+      border: "1px solid var(--border-active)",
+      borderRadius: "24px", zIndex: 1000,
+      boxShadow: "0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px var(--border)",
+      overflow: "hidden",
+    }}>
+      {/* Header */}
+      <div style={{
+        background: "var(--gradient-primary)", padding: "16px 20px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{
+            width: "36px", height: "36px", borderRadius: "50%",
+            background: "rgba(255,255,255,0.2)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <AIChatIcon />
+          </div>
+          <div>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "white" }}>Wellness AI</div>
+            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.75)", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
+              Online now
+            </div>
+          </div>
+        </div>
+        <button onClick={onClose} style={{
+          background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%",
+          width: "30px", height: "30px", cursor: "pointer", color: "white",
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px",
+        }}>×</button>
+      </div>
+
+      {/* Messages */}
+      <div style={{
+        height: "220px", overflowY: "auto", padding: "16px",
+        display: "flex", flexDirection: "column", gap: "10px",
+        background: "var(--surface)",
+      }}>
+        {messages.map((msg, i) => (
+          <div key={i} style={{
+            display: "flex", justifyContent: msg.from === "user" ? "flex-end" : "flex-start",
+          }}>
+            <div style={{
+              maxWidth: "80%", padding: "10px 14px",
+              borderRadius: msg.from === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+              background: msg.from === "user" ? "var(--gradient-primary)" : "var(--surface-2)",
+              color: msg.from === "user" ? "white" : "var(--text-primary)",
+              fontSize: "13px", lineHeight: 1.5,
+              border: msg.from === "bot" ? "1px solid var(--border)" : "none",
+            }}>
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {typing && (
+          <div style={{ display: "flex", gap: "4px", padding: "10px 14px" }}>
+            {[0, 1, 2].map(i => (
+              <span key={i} style={{
+                width: "6px", height: "6px", borderRadius: "50%",
+                background: "var(--primary)", display: "inline-block",
+                animation: `typing-dot 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Input */}
+      <div style={{
+        padding: "12px 14px", borderTop: "1px solid var(--border)",
+        display: "flex", gap: "8px", background: "var(--surface)",
+      }}>
+        <input
+          type="text"
+          placeholder="Type a message…"
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && sendMessage()}
+          style={{
+            flex: 1, background: "var(--surface-2)", border: "1px solid var(--border)",
+            borderRadius: "100px", padding: "9px 14px", fontSize: "13px",
+            color: "var(--text-primary)", outline: "none", fontFamily: "inherit",
+          }}
+        />
+        <button onClick={sendMessage} style={{
+          width: "36px", height: "36px", borderRadius: "50%",
+          background: "var(--gradient-primary)", border: "none", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          flexShrink: 0,
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <style>{`
+        @keyframes typing-dot {
+          0%, 80%, 100% { transform: scale(1); opacity: 0.4; }
+          40% { transform: scale(1.3); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════ */
 export default function FloatingActions() {
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const btnRef = useRef<HTMLDivElement>(null);
-  const whatsappRef = useRef<HTMLAnchorElement>(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  const scrollBtnRef = useRef<HTMLButtonElement>(null);
+  const chatBtnRef = useRef<HTMLButtonElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      const scrollY = window.scrollY;
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docH > 0 ? (scrollY / docH) * 100 : 0);
+      setShowScrollTop(scrollY > 400);
     };
     window.addEventListener("scroll", handleScroll);
 
-    // Entrance animation
-    gsap.fromTo(
-      [whatsappRef.current],
-      { scale: 0, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)", delay: 2 }
+    // Entry animation — AI chat button
+    gsap.fromTo(chatBtnRef.current,
+      { scale: 0, opacity: 0, rotate: -30 },
+      { scale: 1, opacity: 1, rotate: 0, duration: 0.6, ease: "back.out(2)", delay: 2 }
     );
-
-    // Subtle pulse on WhatsApp button
-    gsap.to(whatsappRef.current, {
-      scale: 1.05,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      delay: 3,
+    // Gentle bob
+    gsap.to(chatBtnRef.current, {
+      y: -5, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.5,
     });
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (btnRef.current) {
-      gsap.to(btnRef.current, {
-        opacity: showScrollTop ? 1 : 0,
-        scale: showScrollTop ? 1 : 0.8,
-        duration: 0.3,
-        ease: "power2.out",
-        pointerEvents: showScrollTop ? "auto" : "none",
-      });
-    }
+    if (!scrollBtnRef.current) return;
+    gsap.to(scrollBtnRef.current, {
+      opacity: showScrollTop ? 1 : 0,
+      scale: showScrollTop ? 1 : 0.5,
+      y: showScrollTop ? 0 : 20,
+      duration: 0.4,
+      ease: showScrollTop ? "back.out(1.7)" : "power2.in",
+      pointerEvents: showScrollTop ? "auto" : "none",
+    });
   }, [showScrollTop]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (scrollBtnRef.current) {
+      gsap.fromTo(scrollBtnRef.current,
+        { rotate: 0 },
+        { rotate: -360, duration: 0.6, ease: "power2.out" }
+      );
+    }
+  };
 
   return (
     <>
-      {/* WhatsApp floating button */}
-      <a
-        ref={whatsappRef}
-        href="https://wa.me/919876543210?text=Hi!%20I%20want%20to%20know%20more%20about%20TallyPrime%20solutions."
-        target="_blank"
-        rel="noopener noreferrer"
+      {/* ── AI Chat Bubble ── */}
+      <AIChatBubble open={chatOpen} onClose={() => setChatOpen(false)} />
+
+      {/* ── AI Chat Button ── */}
+      <button
+        ref={chatBtnRef}
+        onClick={() => setChatOpen(o => !o)}
+        title="Chat with Wellness AI"
         style={{
-          position: "fixed",
-          bottom: "90px",
-          right: "24px",
-          width: "56px",
-          height: "56px",
-          borderRadius: "50%",
-          background: "#25D366",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 4px 20px rgba(37, 211, 102, 0.5)",
-          textDecoration: "none",
-          zIndex: 999,
-          opacity: 0,
-          transition: "box-shadow 0.3s ease",
+          position: "fixed", bottom: "90px", right: "24px",
+          width: "58px", height: "58px", borderRadius: "50%",
+          background: chatOpen
+            ? "linear-gradient(135deg, #6BA880 0%, #3D6B4F 100%)"
+            : "var(--gradient-primary)",
+          border: "none", cursor: "pointer", zIndex: 999, opacity: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 6px 24px rgba(61,107,79,0.45)",
+          transition: "box-shadow 0.3s ease, transform 0.2s ease",
         }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 30px rgba(37, 211, 102, 0.7)";
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = "0 10px 36px rgba(61,107,79,0.65)";
+          gsap.to(e.currentTarget, { scale: 1.1, duration: 0.25, ease: "back.out(2)" });
         }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(37, 211, 102, 0.5)";
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = "0 6px 24px rgba(61,107,79,0.45)";
+          gsap.to(e.currentTarget, { scale: 1, duration: 0.35, ease: "elastic.out(1,0.5)" });
         }}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        {/* Pulsing ring when closed */}
+        {!chatOpen && (
+          <span style={{
+            position: "absolute", inset: "-6px",
+            borderRadius: "50%",
+            border: "2px solid var(--primary)",
+            opacity: 0.35,
+            animation: "chat-pulse 2s ease-out infinite",
+          }} />
+        )}
+        <AIChatIcon />
+      </button>
+
+      {/* ── Scroll-to-top ── */}
+      <button
+        ref={scrollBtnRef}
+        onClick={scrollToTop}
+        title="Back to top"
+        style={{
+          position: "fixed", bottom: "24px", right: "24px",
+          width: "50px", height: "50px",
+          borderRadius: "16px",
+          background: "var(--surface)",
+          border: "1.5px solid var(--border-active)",
+          cursor: "pointer", zIndex: 999, opacity: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          flexDirection: "column", gap: "2px",
+          boxShadow: "var(--shadow-card)",
+          overflow: "hidden",
+          transition: "border-color 0.2s",
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.borderColor = "var(--primary)";
+          gsap.to(e.currentTarget, { y: -4, scale: 1.06, duration: 0.25, ease: "back.out(2)" });
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.borderColor = "var(--border-active)";
+          gsap.to(e.currentTarget, { y: 0, scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)" });
+        }}
+      >
+        {/* Circular progress ring */}
+        <svg
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", transform: "rotate(-90deg)" }}
+          viewBox="0 0 50 50"
+        >
+          <circle cx="25" cy="25" r="22" fill="none" stroke="var(--border)" strokeWidth="2.5" />
+          <circle
+            cx="25" cy="25" r="22" fill="none"
+            stroke="var(--primary)" strokeWidth="2.5"
+            strokeDasharray={`${2 * Math.PI * 22}`}
+            strokeDashoffset={`${2 * Math.PI * 22 * (1 - scrollProgress / 100)}`}
+            strokeLinecap="round"
+            style={{ transition: "stroke-dashoffset 0.1s ease" }}
+          />
         </svg>
-      </a>
+        {/* Icon */}
+        <ChevronsUp size={18} style={{ color: "var(--primary)", position: "relative", zIndex: 1 }} />
+      </button>
 
-      {/* Scroll to top */}
-      <div
-        ref={btnRef}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        style={{
-          position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          width: "48px",
-          height: "48px",
-          borderRadius: "50%",
-          background: "var(--gradient-primary)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 4px 20px var(--border-active)",
-          cursor: "pointer",
-          zIndex: 999,
-          opacity: 0,
-          transition: "box-shadow 0.3s ease",
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 30px var(--border-active)";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px var(--border-active)";
-        }}
-      >
-        <ArrowUp size={20} color="white" />
-      </div>
-
-      {/* Call button (mobile only) */}
+      {/* Mobile call button */}
       <a
-        href="tel:+919876543210"
-        className="md:hidden"
+        href="tel:+18009355637"
         style={{
-          position: "fixed",
-          bottom: "90px",
-          left: "24px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
+          position: "fixed", bottom: "90px", left: "24px",
+          display: "none",
+          alignItems: "center", gap: "8px",
           background: "var(--gradient-primary)",
-          borderRadius: "100px",
-          padding: "12px 18px",
-          textDecoration: "none",
-          color: "white",
-          fontWeight: 700,
-          fontSize: "14px",
+          borderRadius: "100px", padding: "12px 20px",
+          textDecoration: "none", color: "white",
+          fontWeight: 700, fontSize: "14px",
           zIndex: 999,
-          boxShadow: "0 4px 20px var(--border-active)",
+          boxShadow: "0 4px 20px var(--primary-glow)",
         }}
+        className="mobile-call-btn"
       >
-        <Phone size={16} />
-        Call Now
+        <Phone size={16} /> Call Now
       </a>
+
+      <style>{`
+        @keyframes chat-pulse {
+          0% { transform: scale(1); opacity: 0.35; }
+          70% { transform: scale(1.5); opacity: 0; }
+          100% { transform: scale(1.5); opacity: 0; }
+        }
+        @media (max-width: 768px) {
+          .mobile-call-btn { display: flex !important; }
+        }
+      `}</style>
     </>
   );
 }

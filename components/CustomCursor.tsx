@@ -32,7 +32,7 @@ export default function CustomCursor() {
         gsap.to(cursor, { scale: 0, duration: 0.2 });
         gsap.to(follower, { 
           scale: 1.5, 
-          backgroundColor: "rgba(0, 82, 204, 0.1)", // Primary glow
+          backgroundColor: "rgba(61, 107, 79, 0.1)",
           borderColor: "var(--primary)",
           duration: 0.3 
         });

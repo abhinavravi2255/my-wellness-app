@@ -3,23 +3,25 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Award, Users, Calendar, MapPin, Target, Zap, Shield, TrendingUp } from "lucide-react";
-import Logo from "./Logo";
+import { Award, BookOpen, Heart, Leaf, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
-const achievements = [
-  { icon: Award, label: "5-Star Certified Partner", desc: "Highest Tally certification level", color: "#FFC107" },
-  { icon: Users, label: "2000+ Happy Clients", desc: "Across India & beyond", color: "#0066FF" },
-  { icon: Calendar, label: "15+ Years Experience", desc: "Established in 2008", color: "#00D4FF" },
-  { icon: MapPin, label: "Pan-India Service", desc: "Remote & onsite support", color: "#22C55E" },
+const credentials = [
+  { icon: <Award size={16} />, text: "Certified Wellness Coach (ICF Accredited)" },
+  { icon: <BookOpen size={16} />, text: "Nutrition & Lifestyle Medicine Practitioner" },
+  { icon: <Heart size={16} />, text: "Mindfulness-Based Stress Reduction (MBSR)" },
+  { icon: <Leaf size={16} />, text: "Integrative Health & Functional Wellness" },
 ];
 
-const teamValues = [
-  { icon: Target, title: "Precision", desc: "Every implementation tailored to exact business requirements." },
-  { icon: Zap, title: "Speed", desc: "Rapid deployment ensuring go-live with minimal downtime." },
-  { icon: Shield, title: "Reliability", desc: "Proven track record with 100% uptime SLA and 24/7 support." },
-  { icon: TrendingUp, title: "Growth", desc: "Scalable solutions that expand as your business does." },
+const journey = [
+  { year: "2016", title: "The Turning Point", desc: "After struggling with burnout and chronic stress, I discovered the power of holistic wellness — and it changed everything." },
+  { year: "2018", title: "Getting Certified", desc: "Pursued rigorous training in wellness coaching, nutrition science, and mindfulness-based practices." },
+  { year: "2020", title: "Launching Practice", desc: "Opened doors to my private coaching practice, helping individuals reclaim their vitality and joy." },
+  { year: "2024", title: "Growing Community", desc: "500+ lives transformed through personalised programs, group circles, and digital wellness resources." },
 ];
 
 export default function About() {
@@ -27,119 +29,196 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.to(".about-visual", {
-        yPercent: -8, ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
-      });
-      gsap.fromTo(".about-content-item", { x: -40, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power3.out", scrollTrigger: { trigger: ".about-content", start: "top 80%" } }
+      gsap.fromTo(".about-img-col",
+        { x: -60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: "power3.out",
+          scrollTrigger: { trigger: ".about-grid", start: "top 75%" } }
       );
-      gsap.fromTo(".about-visual-card", { x: 40, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: ".about-visual", start: "top 80%" } }
+      gsap.fromTo(".about-text-col",
+        { x: 60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: "power3.out",
+          scrollTrigger: { trigger: ".about-grid", start: "top 75%" } }
       );
-      gsap.fromTo(".value-card", { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out", scrollTrigger: { trigger: ".values-grid", start: "top 85%" } }
+      gsap.fromTo(".journey-item",
+        { x: 30, opacity: 0 },
+        {
+          x: 0, opacity: 1, duration: 0.7, stagger: 0.15, ease: "power3.out",
+          scrollTrigger: { trigger: ".journey-list", start: "top 78%" }
+        }
       );
-      gsap.fromTo(".achievement-item", { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out", scrollTrigger: { trigger: ".achievements-row", start: "top 85%" } }
+      gsap.fromTo(".credential-item",
+        { y: 20, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out",
+          scrollTrigger: { trigger: ".credentials-list", start: "top 82%" }
+        }
       );
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" style={{ padding: "100px 0", position: "relative", overflow: "hidden" }}>
-      <div className="orb orb-blue" style={{ width: "400px", height: "400px", top: "20%", right: "-100px", opacity: 0.15 }} />
+    <section ref={sectionRef} id="about" className="section-pad" style={{ position: "relative", overflow: "hidden" }}>
+      <div className="orb orb-accent" style={{ width: "400px", height: "400px", top: "0", right: "-100px", opacity: 0.4 }} />
 
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
-        {/* Main grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center", marginBottom: "80px" }} className="about-grid">
-
-          {/* Visual */}
-          <div className="about-visual" style={{ position: "relative" }}>
-            <div className="about-visual-card" style={{
-              background: "var(--gradient-surface)", border: "1px solid var(--border)",
-              borderRadius: "24px", padding: "40px", position: "relative", overflow: "hidden",
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        {/* Grid */}
+        <div className="about-grid" style={{
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center",
+          marginBottom: "90px",
+        }}>
+          {/* Left: Image */}
+          <div className="about-img-col" style={{ position: "relative" }}>
+            <div style={{
+              position: "relative", borderRadius: "var(--radius-xl)",
+              overflow: "hidden", aspectRatio: "3/4", maxHeight: "560px",
+              boxShadow: "var(--shadow-deep)",
             }}>
-              <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div style={{ marginBottom: "24px", display: "inline-block" }}><Logo size={80} /></div>
-                <div style={{ fontSize: "24px", fontWeight: 800, marginBottom: "8px" }}>TallyPro Solutions</div>
-                <div style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "24px" }}>Certified 5-Star Tally Partner</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
-                  {[{ num: "2000+", label: "Clients" }, { num: "15+", label: "Years" }, { num: "10+", label: "Industries" }, { num: "100%", label: "Uptime" }].map(m => (
-                    <div key={m.label} style={{ background: "var(--primary-glow)", border: "1px solid var(--border-active)", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
-                      <div style={{ fontSize: "22px", fontWeight: 800, color: "var(--primary-light)" }}>{m.num}</div>
-                      <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>{m.label}</div>
-                    </div>
-                  ))}
+              <Image
+                src="/wellness-about.png"
+                alt="Asuhar B — Wellness Coach consultation"
+                fill
+                sizes="(max-width: 900px) 100vw, 50vw"
+                style={{ objectFit: "cover" }}
+              />
+              <div style={{
+                position: "absolute", inset: 0,
+                background: "linear-gradient(to top, rgba(14,26,18,0.5) 0%, transparent 60%)",
+              }} />
+            </div>
+
+            {/* Floating badge */}
+            <div style={{
+              position: "absolute", top: "-24px", right: "-24px",
+              background: "var(--gradient-accent)",
+              borderRadius: "var(--radius-lg)", padding: "22px",
+              textAlign: "center", boxShadow: "var(--shadow-deep)",
+              minWidth: "120px",
+            }}>
+              <div style={{ fontSize: "36px", fontWeight: 700, fontFamily: "var(--font-cormorant), Georgia, serif", color: "white", lineHeight: 1 }}>8+</div>
+              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.85)", fontWeight: 600, marginTop: "4px" }}>Years of<br />Excellence</div>
+            </div>
+
+            {/* Decorative element */}
+            <div style={{
+              position: "absolute", bottom: "-20px", left: "-20px",
+              background: "var(--surface)", border: "1px solid var(--border-active)",
+              borderRadius: "var(--radius)", padding: "16px 22px",
+              boxShadow: "var(--shadow-card)",
+              backdropFilter: "blur(12px)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{
+                  width: "40px", height: "40px", borderRadius: "50%",
+                  background: "var(--gradient-primary)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <Heart size={18} fill="white" style={{ color: "white" }} />
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", background: "rgba(255,193,7,0.1)", border: "1px solid rgba(255,193,7,0.3)", borderRadius: "10px", padding: "10px 16px" }}>
-                  {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: "16px" }}>⭐</span>)}
-                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#FFC107", marginLeft: "4px" }}>Tally 5-Star Certified</span>
+                <div>
+                  <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-cormorant), Georgia, serif" }}>95% Success</div>
+                  <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>Client outcomes</div>
                 </div>
               </div>
             </div>
-            <div style={{ position: "absolute", bottom: "-24px", right: "-24px", background: "var(--surface-2)", border: "1px solid rgba(0,212,255,0.4)", borderRadius: "14px", padding: "16px 20px", backdropFilter: "blur(10px)", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", fontWeight: 800, color: "#00D4FF" }}>GST</div>
-              <div style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: 600 }}>Ready</div>
-            </div>
           </div>
 
-          {/* Content */}
-          <div className="about-content">
-            <div className="about-content-item section-tag" style={{ marginBottom: "20px" }}><Award size={14} /> About Us</div>
-            <h2 className="about-content-item" style={{ fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 900, lineHeight: 1.15, marginBottom: "20px" }}>
-              15+ Years of <span className="text-gradient">Tally Expertise</span> Serving India's Businesses
-            </h2>
-            <p className="about-content-item" style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
-              TallyPro Solutions is a premier Tally Certified 5-Star Partner established in 2008. We've evolved into a trailblazer in TallyPrime software sales, service, and customization with a proven track record of 2000+ satisfied customers across India and beyond.
-            </p>
-            <p className="about-content-item" style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "32px" }}>
-              Our team of highly qualified, Tally-certified IT professionals brings diverse expertise to address every business challenge. We leverage technology, services, and talent to consistently empower clients to enhance productivity and reduce operational costs.
-            </p>
-            <div className="values-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-              {teamValues.map(v => {
-                const Icon = v.icon;
-                return (
-                  <div key={v.title} className="value-card" style={{ background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: "14px", padding: "18px" }}>
-                    <Icon size={18} style={{ color: "var(--primary-light)", marginBottom: "8px" }} />
-                    <div style={{ fontSize: "15px", fontWeight: 700, marginBottom: "4px" }}>{v.title}</div>
-                    <div style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.5 }}>{v.desc}</div>
-                  </div>
-                );
-              })}
+          {/* Right: Content */}
+          <div className="about-text-col">
+            <div className="section-tag" style={{ marginBottom: "24px" }}>
+              <Heart size={12} /> My Story
             </div>
+            <h2 className="font-display" style={{
+              fontSize: "clamp(34px, 4vw, 54px)", fontWeight: 700,
+              lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "24px",
+            }}>
+              From Burnout to<br /><span className="text-gradient">Radiant Wellbeing</span>
+            </h2>
+
+            <p style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: "20px" }}>
+              I'm <strong style={{ color: "var(--text-primary)" }}>Asuhar B</strong>, a certified Wellness & Lifestyle Builder with over 8 years of experience guiding individuals toward their healthiest, most fulfilling lives.
+            </p>
+            <p style={{ fontSize: "16px", color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: "32px" }}>
+              My journey began from a deeply personal place — navigating my own battles with stress, poor health habits, and a disconnected lifestyle. That transformation ignited my passion for helping others create lives they truly love, from the inside out.
+            </p>
+
+            {/* Credentials */}
+            <div className="credentials-list" style={{ marginBottom: "36px" }}>
+              {credentials.map((c, i) => (
+                <div key={i} className="credential-item" style={{
+                  display: "flex", alignItems: "center", gap: "12px",
+                  padding: "12px 0",
+                  borderBottom: i < credentials.length - 1 ? "1px solid var(--border)" : "none",
+                }}>
+                  <div style={{
+                    width: "36px", height: "36px", borderRadius: "10px",
+                    background: "var(--primary-glow)", border: "1px solid var(--border-active)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "var(--primary)", flexShrink: 0,
+                  }}>
+                    {c.icon}
+                  </div>
+                  <span style={{ fontSize: "15px", color: "var(--text-secondary)", fontWeight: 500 }}>{c.text}</span>
+                </div>
+              ))}
+            </div>
+
+            <a href="#contact" className="btn-primary" style={{ display: "inline-flex" }}>
+              Work With Me <ArrowRight size={16} />
+            </a>
           </div>
         </div>
 
-        {/* Achievements */}
-        <div className="achievements-row" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "20px" }}>
-          {achievements.map(a => {
-            const Icon = a.icon;
-            return (
-              <div key={a.label} className="achievement-item" style={{
-                background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: "18px",
-                padding: "28px 24px", textAlign: "center", transition: "all 0.3s ease",
-              }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = `${a.color}44`; el.style.transform = "translateY(-4px)"; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--border)"; el.style.transform = "translateY(0)"; }}
-              >
-                <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: `${a.color}15`, border: `1px solid ${a.color}30`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-                  <Icon size={22} style={{ color: a.color }} />
+        {/* Journey timeline */}
+        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "80px" }}>
+          <h3 className="font-display" style={{
+            fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 700,
+            textAlign: "center", marginBottom: "56px", letterSpacing: "-0.01em",
+          }}>
+            My <span className="text-gradient">Wellness Journey</span>
+          </h3>
+          <div className="journey-list" style={{
+            display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2px",
+          }}>
+            {journey.map((j, i) => (
+              <div key={i} className="journey-item" style={{
+                padding: "32px 28px",
+                background: i % 2 === 0 ? "var(--surface)" : "var(--surface-2)",
+                borderRadius: i === 0 ? "var(--radius-lg) 0 0 var(--radius-lg)" : i === 3 ? "0 var(--radius-lg) var(--radius-lg) 0" : "0",
+                border: "1px solid var(--border)",
+                borderLeft: i === 0 ? "1px solid var(--border)" : "none",
+                position: "relative", overflow: "hidden",
+              }}>
+                <div style={{
+                  fontSize: "13px", fontWeight: 700, color: "var(--primary)",
+                  letterSpacing: "0.08em", marginBottom: "12px",
+                }}>
+                  {j.year}
                 </div>
-                <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "4px" }}>{a.label}</div>
-                <div style={{ fontSize: "13px", color: "var(--text-muted)" }}>{a.desc}</div>
+                <div style={{
+                  width: "3px", height: "24px", background: "var(--gradient-primary)",
+                  borderRadius: "2px", marginBottom: "16px",
+                }} />
+                <h4 style={{ fontSize: "17px", fontWeight: 700, marginBottom: "10px", color: "var(--text-primary)", fontFamily: "var(--font-cormorant), Georgia, serif" }}>
+                  {j.title}
+                </h4>
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.6 }}>
+                  {j.desc}
+                </p>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-          .achievements-row { grid-template-columns: repeat(2,1fr) !important; }
+      <style>{`
+        @media (max-width: 900px) {
+          .about-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+          .journey-list { grid-template-columns: 1fr 1fr !important; }
+          .journey-item { border-radius: var(--radius) !important; border-left: 1px solid var(--border) !important; }
+        }
+        @media (max-width: 560px) {
+          .journey-list { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

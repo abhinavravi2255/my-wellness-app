@@ -2,369 +2,515 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Menu, X, ChevronDown, Phone } from "lucide-react";
-import MagneticButton from "./MagneticButton";
-import ThemeToggle from "./ThemeToggle";
-import ColorToggle from "./ColorToggle";
-import Logo from "./Logo";
-import Link from "next/link";
+import { Leaf, Menu, X, ArrowRight, Sun, Moon, ChevronRight, Globe, Palette } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const navItems = [
-  { label: "Home", href: "#home" },
-  {
-    label: "Products",
-    href: "#products",
-    children: [
-      { label: "TallyPrime Silver", href: "#products" },
-      { label: "TallyPrime Gold", href: "#products" },
-      { label: "TallyPrime Server", href: "#products" },
-      { label: "TallyPrime Rental", href: "#products" },
-      { label: "Mobile App", href: "#products" },
-    ],
-  },
-  {
-    label: "Services",
-    href: "#services",
-    children: [
-      { label: "Implementation", href: "#services" },
-      { label: "Customization", href: "#services" },
-      { label: "Support & AMC", href: "#services" },
-      { label: "Training", href: "#services" },
-      { label: "Data Migration", href: "#services" },
-    ],
-  },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+const navLinks = [
+  { label: "Home", href: "#home", icon: "🏠" },
+  { label: "About", href: "#about", icon: "👤" },
+  { label: "Programs", href: "#services", icon: "🌿" },
+  { label: "Results", href: "#testimonials", icon: "⭐" },
+  { label: "Blog", href: "#blog", icon: "📖" },
+  { label: "Contact", href: "#contact", icon: "✉️" },
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [colorTheme, setColorTheme] = useState("green");
+
+  // ── Theme toggle ──
+  const toggleTheme = () => {
+    const newDark = !isDark;
+    setIsDark(newDark);
+    if (newDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
+  // ── Color Theme toggle ──
+  const toggleColorTheme = () => {
+    const themes = ["green", "violet", "neon"];
+    const currentIndex = themes.indexOf(colorTheme);
+    const newColor = themes[(currentIndex + 1) % themes.length] || "green";
+    setColorTheme(newColor);
+    document.documentElement.setAttribute("data-theme", newColor);
+    localStorage.setItem("colorTheme", newColor);
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
+    // Force scroll to top on refresh
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
 
-    // GSAP entrance animation
-    gsap.fromTo(
-      navRef.current,
-      { y: -80, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.2 }
-    );
+    setMounted(true);
+    const stored = localStorage.getItem("theme");
+    const dark = stored ? stored === "dark" : false;
+    setIsDark(dark);
+    if (dark) document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    const storedColor = localStorage.getItem("colorTheme") || "green";
+    setColorTheme(storedColor);
+    document.documentElement.setAttribute("data-theme", storedColor);
   }, []);
 
-  const handleDropdown = (label: string) => {
-    setActiveDropdown(activeDropdown === label ? null : label);
+  useEffect(() => {
+    // ── GSAP entry — nav slides in, logo bounces, links stagger in ──
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.1 });
+
+      // Full nav bar slides down
+      tl.fromTo(navRef.current,
+        { y: -80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }
+      );
+
+      // Logo bounces in
+      tl.fromTo(logoRef.current,
+        { scale: 0.6, opacity: 0, rotate: -10 },
+        { scale: 1, opacity: 1, rotate: 0, duration: 0.6, ease: "back.out(2)" },
+        "-=0.4"
+      );
+
+      // Nav links stagger in from above
+      tl.fromTo(".nav-link-item",
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.07, ease: "power2.out" },
+        "-=0.3"
+      );
+
+      // CTA button pops in
+      tl.fromTo(".nav-cta-btn",
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
+        "-=0.2"
+      );
+    });
+
+    // ── Scroll handler ──
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      const sections = navLinks.map(l => l.href.replace("#", ""));
+      for (const id of [...sections].reverse()) {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 120) {
+          setActiveSection(id);
+          break;
+        }
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      ctx.revert();
+    };
+  }, []);
+
+  const handleNavClick = (href: string) => {
+    setMenuOpen(false);
+    const id = href.replace("#", "");
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // ── Magnetic effect on CTA ──
+  const handleCtaMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: "power2.out" });
+  };
+  const handleCtaMouseLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.5)" });
   };
 
   return (
-    <nav
-      ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass-strong shadow-lg" : "bg-transparent"
-      }`}
-    >
-      {/* Top bar */}
-      <div
-        className="top-announcement-bar max-md:hidden"
+    <>
+      <nav
+        ref={navRef}
         style={{
-          background: "linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-dark) 100%)",
-          backgroundSize: "200% auto",
-          padding: "8px 0",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-          color: "white",
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+          padding: scrolled ? "0" : "0",
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
-        <style>{`
-          @keyframes gradientMove {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-          }
-          .top-announcement-bar {
-            animation: gradientMove 8s linear infinite;
-          }
-        `}</style>
+        {/* ── Inner pill / bar ── */}
         <div style={{
-          maxWidth: "1280px", margin: "0 auto", padding: "0 24px",
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          fontSize: "13px", fontWeight: 600, letterSpacing: "0.02em"
+          margin: scrolled ? "0" : "12px 24px 0",
+          background: scrolled
+            ? "var(--glass-strong-bg)"
+            : "var(--glass-bg)",
+          backdropFilter: "blur(28px)",
+          WebkitBackdropFilter: "blur(28px)",
+          border: scrolled ? "none" : "1px solid var(--border)",
+          borderBottom: scrolled ? "1px solid var(--border)" : "1px solid var(--border)",
+          borderRadius: scrolled ? "0" : "100px",
+          padding: scrolled ? "14px 32px" : "10px 16px",
+          transition: "all 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          boxShadow: scrolled ? "0 2px 40px rgba(0,0,0,0.12)" : "0 8px 40px rgba(0,0,0,0.08)",
         }}>
-          {/* Left side */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(255,255,255,0.15)", padding: "3px 10px", borderRadius: "100px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-              <span style={{ fontSize: "14px" }}>⭐</span> 5-Star Certified Partner
-            </span>
-            <span className="hidden sm:inline" style={{ color: "rgba(255,255,255,0.8)" }}>Serving businesses since 2008</span>
-          </div>
 
-          {/* Right side */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <a href="tel:+919876543210" style={{ display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.opacity="0.8"} onMouseLeave={e => e.currentTarget.style.opacity="1"}>
-              <Phone size={12} /> +91 98765 43210
-            </a>
-            <div style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.3)" }} />
-            {/* <a href="#contact" style={{ display: "flex", alignItems: "center", gap: "6px", color: "#FFAB00", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e => e.currentTarget.style.transform="scale(1)"}>
-              🎯 Get in Touch
-            </a> */}
-          </div>
-        </div>
-      </div>
-      <div
-        className="navbar-container"
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "70px",
-        }}
-      >
-        {/* Logo */}
-        <a href="#home" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform="scale(1.02)"} onMouseLeave={e => e.currentTarget.style.transform="scale(1)"}>
-          <Logo size={44} className="logo-svg" />
-          <div className="logo-text" style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: "20px", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--text-primary)", lineHeight: 1.1 }}>
-              TallyPro
-            </span>
-            <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--primary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Solutions
-            </span>
-          </div>
-        </a>
+          {/* ── Logo ── */}
+          <a
+            ref={logoRef}
+            href="#home"
+            onClick={() => handleNavClick("#home")}
+            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}
+          >
+            {/* Animated logo icon */}
+            <div style={{ position: "relative" }}>
+              <div style={{
+                width: "40px", height: "40px", borderRadius: "14px",
+                background: "var(--gradient-primary)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 4px 16px var(--primary-glow)",
+                transition: "all 0.3s ease",
+              }}
+                onMouseEnter={e => {
+                  gsap.to(e.currentTarget, { rotate: 10, scale: 1.08, duration: 0.3, ease: "back.out(2)" });
+                }}
+                onMouseLeave={e => {
+                  gsap.to(e.currentTarget, { rotate: 0, scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" });
+                }}
+              >
+                <Globe size={19} style={{ color: "white" }} />
+              </div>
+              {/* Pulse ring */}
+              <div style={{
+                position: "absolute", inset: "-4px",
+                borderRadius: "18px",
+                border: "2px solid var(--primary)",
+                opacity: 0.25,
+                animation: "pulse-ring-nav 2s ease-out infinite",
+              }} />
+            </div>
 
-        {/* Desktop Nav */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }} className="desktop-nav">
-          {navItems.map((item) => (
-            <div key={item.label} style={{ position: "relative" }}>
-              {item.children ? (
-                <div>
-                  <button
-                    onClick={() => handleDropdown(item.label)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      padding: "8px 14px",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "var(--text-secondary)",
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      borderRadius: "8px",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
-                      setActiveDropdown(item.label);
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                      (e.currentTarget as HTMLElement).style.background = "none";
-                    }}
-                  >
-                    {item.label}
-                    <ChevronDown size={14} />
-                  </button>
-                  {/* Dropdown */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "calc(100% + 8px)",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      background: "var(--surface-2)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "12px",
-                      padding: "8px",
-                      minWidth: "200px",
-                      backdropFilter: "blur(20px)",
-                      boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
-                      display: activeDropdown === item.label ? "block" : "none",
-                      zIndex: 100,
-                    }}
-                    onMouseEnter={() => setActiveDropdown(item.label)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    {item.children.map((child) => (
-                      <a
-                        key={child.label}
-                        href={child.href}
-                        style={{
-                          display: "block",
-                          padding: "9px 14px",
-                          color: "var(--text-secondary)",
-                          textDecoration: "none",
-                          fontSize: "14px",
-                          borderRadius: "8px",
-                          transition: "all 0.2s ease",
-                          fontWeight: 500,
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                          (e.currentTarget as HTMLElement).style.background = "var(--primary-glow)";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                          (e.currentTarget as HTMLElement).style.background = "none";
-                        }}
-                      >
-                        {child.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <a
-                  href={item.href}
+            <div>
+              <div style={{
+                fontFamily: "var(--font-cormorant), Georgia, serif",
+                fontSize: "20px", fontWeight: 700,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.02em", lineHeight: 1.1,
+              }}>
+                Mission 444
+              </div>
+              <div style={{
+                fontSize: "9px", color: "var(--primary)",
+                fontWeight: 700, letterSpacing: "0.14em",
+                textTransform: "uppercase",
+              }}>
+                Wellness World
+              </div>
+            </div>
+          </a>
+
+          {/* ── Desktop nav links ── */}
+          <div
+            ref={linksRef}
+            className="nav-desktop"
+            style={{ display: "flex", alignItems: "center", gap: "2px" }}
+          >
+            {navLinks.map(link => {
+              const isActive = activeSection === link.href.replace("#", "");
+              const isHovered = hoveredLink === link.href;
+              return (
+                <button
+                  key={link.href}
+                  className="nav-link-item"
+                  onClick={() => handleNavClick(link.href)}
+                  onMouseEnter={() => setHoveredLink(link.href)}
+                  onMouseLeave={() => setHoveredLink(null)}
                   style={{
-                    display: "block",
-                    padding: "8px 14px",
-                    color: "var(--text-secondary)",
-                    textDecoration: "none",
+                    background: "none", border: "none", cursor: "pointer",
+                    padding: "8px 16px", borderRadius: "100px",
+                    color: isActive ? "var(--primary)" : "var(--text-secondary)",
+                    backgroundColor: isActive
+                      ? "var(--primary-glow)"
+                      : isHovered
+                        ? "var(--surface-3)"
+                        : "transparent",
+                    fontWeight: isActive ? 600 : 500,
                     fontSize: "14px",
-                    fontWeight: 500,
-                    borderRadius: "8px",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                    (e.currentTarget as HTMLElement).style.background = "none";
+                    transition: "all 0.22s cubic-bezier(0.4,0,0.2,1)",
+                    fontFamily: "inherit",
+                    position: "relative",
+                    letterSpacing: "0.01em",
                   }}
                 >
-                  {item.label}
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
+                  {/* Active indicator dot */}
+                  {isActive && (
+                    <span style={{
+                      position: "absolute", bottom: "3px", left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "4px", height: "4px", borderRadius: "50%",
+                      background: "var(--primary)",
+                    }} />
+                  )}
+                  {link.label}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* CTA & Theme Toggle */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }} className="desktop-nav">
-          <ThemeToggle />
-          <ColorToggle />
-          <MagneticButton>
-            <a href="#contact" className="btn-primary" style={{ fontSize: "13px", padding: "9px 20px" }}>
-              Get in Touch
+          {/* ── Right: Theme + Color + CTA + Hamburger ── */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+            {/* Theme toggle */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                style={{
+                  width: "38px", height: "38px", borderRadius: "50%",
+                  border: "1.5px solid var(--border)",
+                  background: "var(--surface-2)",
+                  color: "var(--text-primary)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
+                  flexShrink: 0,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = "var(--primary)";
+                  e.currentTarget.style.background = "var(--primary-glow)";
+                  e.currentTarget.style.color = "var(--primary)";
+                  gsap.to(e.currentTarget, { rotate: 20, scale: 1.08, duration: 0.3, ease: "back.out(2)" });
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = "var(--border)";
+                  e.currentTarget.style.background = "var(--surface-2)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                  gsap.to(e.currentTarget, { rotate: 0, scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)" });
+                }}
+              >
+                {isDark
+                  ? <Sun size={17} style={{ transition: "all 0.3s ease" }} />
+                  : <Moon size={17} style={{ transition: "all 0.3s ease" }} />
+                }
+              </button>
+            )}
+
+            {/* Color Theme toggle */}
+            {mounted && (
+              <button
+                onClick={toggleColorTheme}
+                title={`Switch to ${colorTheme === "green" ? "Celestial Violet" : colorTheme === "violet" ? "Electric Neon" : "Earth Green"} Theme`}
+                style={{
+                  width: "38px", height: "38px", borderRadius: "50%",
+                  border: "1.5px solid var(--border)",
+                  background: "var(--surface-2)",
+                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F", // Show next color as hint
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
+                  flexShrink: 0,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = "var(--primary)";
+                  e.currentTarget.style.background = "var(--primary-glow)";
+                  e.currentTarget.style.color = "var(--primary)";
+                  gsap.to(e.currentTarget, { rotate: -20, scale: 1.08, duration: 0.3, ease: "back.out(2)" });
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = "var(--border)";
+                  e.currentTarget.style.background = "var(--surface-2)";
+                  e.currentTarget.style.color = colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F";
+                  gsap.to(e.currentTarget, { rotate: 0, scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)" });
+                }}
+              >
+                <Palette size={17} style={{ transition: "all 0.3s ease" }} />
+              </button>
+            )}
+
+            {/* CTA button — desktop */}
+            <a
+              href="#contact"
+              className="nav-cta-btn btn-primary nav-cta-desktop"
+              style={{ fontSize: "14px", padding: "10px 22px", gap: "6px" }}
+              onClick={e => { e.preventDefault(); handleNavClick("#contact"); }}
+              onMouseMove={handleCtaMouseMove}
+              onMouseLeave={e => { handleCtaMouseLeave(e); }}
+            >
+              Book Free Call <ChevronRight size={14} />
             </a>
-          </MagneticButton>
-        </div>
 
-        {/* Mobile controls */}
-        <div className="mobile-hamburger" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <ThemeToggle />
-          <ColorToggle />
+            {/* Mobile menu toggle */}
+            <button
+              className="nav-mobile-toggle"
+              onClick={() => setMenuOpen(o => !o)}
+              style={{
+                background: "var(--surface-2)", border: "1.5px solid var(--border)",
+                borderRadius: "12px", padding: "8px 9px", cursor: "pointer",
+                color: "var(--text-primary)", display: "none",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--primary)"; e.currentTarget.style.color = "var(--primary)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Mobile full-screen menu ── */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 999,
+        background: "var(--glass-strong-bg)",
+        backdropFilter: "blur(32px)",
+        WebkitBackdropFilter: "blur(32px)",
+        display: "flex", flexDirection: "column",
+        padding: "0 24px 40px",
+        transform: menuOpen ? "translateY(0)" : "translateY(-100%)",
+        opacity: menuOpen ? 1 : 0,
+        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        pointerEvents: menuOpen ? "auto" : "none",
+      }}>
+        {/* Mobile header */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "20px 0",
+          borderBottom: "1px solid var(--border)", marginBottom: "32px",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{
+              width: "36px", height: "36px", borderRadius: "12px",
+              background: "var(--gradient-primary)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <Globe size={16} style={{ color: "white" }} />
+            </div>
+            <span style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "18px", fontWeight: 700, color: "var(--text-primary)" }}>
+              Mission 444
+            </span>
+          </div>
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setMenuOpen(false)}
             style={{
-              background: "none",
-              border: "1px solid var(--border)",
-              borderRadius: "8px",
-              padding: "8px",
-              cursor: "pointer",
-              color: "var(--text-primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              background: "var(--surface-2)", border: "1px solid var(--border)",
+              borderRadius: "50%", width: "40px", height: "40px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", color: "var(--text-primary)",
             }}
           >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
+            <X size={18} />
           </button>
+        </div>
+
+        {/* Mobile links */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+          {navLinks.map((link, i) => {
+            const isActive = activeSection === link.href.replace("#", "");
+            return (
+              <button
+                key={link.href}
+                onClick={() => handleNavClick(link.href)}
+                style={{
+                  background: isActive ? "var(--primary-glow)" : "none",
+                  border: isActive ? "1px solid var(--border-active)" : "1px solid transparent",
+                  borderRadius: "16px", cursor: "pointer",
+                  textAlign: "left", padding: "16px 20px",
+                  color: isActive ? "var(--primary)" : "var(--text-primary)",
+                  fontSize: "26px", fontWeight: 700,
+                  fontFamily: "var(--font-cormorant), Georgia, serif",
+                  transition: "all 0.2s ease",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  animationDelay: `${i * 0.05}s`,
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "var(--surface-2)";
+                    e.currentTarget.style.borderColor = "var(--border)";
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "none";
+                    e.currentTarget.style.borderColor = "transparent";
+                  }
+                }}
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                  <span style={{ fontSize: "18px" }}>{link.icon}</span>
+                  {link.label}
+                </span>
+                <ArrowRight size={18} style={{ color: isActive ? "var(--primary)" : "var(--text-muted)", transition: "transform 0.2s" }} />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Mobile CTA */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", paddingTop: "24px", borderTop: "1px solid var(--border)" }}>
+          <a
+            href="#contact"
+            className="btn-primary"
+            style={{ justifyContent: "center", fontSize: "16px", padding: "16px" }}
+            onClick={e => { e.preventDefault(); handleNavClick("#contact"); }}
+          >
+            Book Free Discovery Call <ArrowRight size={16} />
+          </a>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            {mounted && (
+              <button
+                onClick={toggleColorTheme}
+                style={{
+                  flex: 1, padding: "12px", minWidth: "45%",
+                  background: "var(--surface-2)", border: "1px solid var(--border)",
+                  borderRadius: "100px", cursor: "pointer",
+                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F",
+                  fontSize: "14px", fontWeight: 600,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  fontFamily: "inherit",
+                }}
+              >
+                <Palette size={16} /> {colorTheme === "green" ? "Violet Theme" : colorTheme === "violet" ? "Neon Theme" : "Green Theme"}
+              </button>
+            )}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                style={{
+                  flex: 1, padding: "12px", minWidth: "45%",
+                  background: "var(--surface-2)", border: "1px solid var(--border)",
+                  borderRadius: "100px", cursor: "pointer",
+                  color: "var(--text-primary)", fontSize: "14px", fontWeight: 600,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  fontFamily: "inherit",
+                }}
+              >
+                {isDark ? <><Sun size={16} /> Light Mode</> : <><Moon size={16} /> Dark Mode</>}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div
-          style={{
-            background: "var(--surface-2)",
-            borderTop: "1px solid var(--border)",
-            padding: "16px 24px",
-          }}
-        >
-          {navItems.map((item) => (
-            <div key={item.label}>
-              <a
-                href={item.href}
-                style={{
-                  display: "block",
-                  padding: "12px 0",
-                  color: "var(--text-secondary)",
-                  textDecoration: "none",
-                  fontSize: "15px",
-                  fontWeight: 500,
-                  borderBottom: "1px solid var(--border)",
-                }}
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </a>
-              {item.children && (
-                <div style={{ paddingLeft: "16px" }}>
-                  {item.children.map((child) => (
-                    <a
-                      key={child.label}
-                      href={child.href}
-                      style={{
-                        display: "block",
-                        padding: "8px 0",
-                        color: "var(--text-muted)",
-                        textDecoration: "none",
-                        fontSize: "13px",
-                      }}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {child.label}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-          <div style={{ marginTop: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
-            <a href="#contact" className="btn-primary" style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-              Get in Touch
-            </a>
-          </div>
-        </div>
-      )}
       <style>{`
-        .navbar-container { padding: 0 24px; }
-        .logo-svg { width: 44px; height: 44px; }
-        .mobile-hamburger { gap: 12px; }
-        
-        @media (min-width: 901px) {
-          .mobile-hamburger { display: none !important; }
+        @keyframes pulse-ring-nav {
+          0% { transform: scale(1); opacity: 0.25; }
+          50% { transform: scale(1.18); opacity: 0.08; }
+          100% { transform: scale(1); opacity: 0.25; }
         }
         @media (max-width: 900px) {
-          .desktop-nav { display: none !important; }
-          .mobile-hamburger { display: flex !important; }
-        }
-        @media (max-width: 480px) {
-          .navbar-container { padding: 0 12px; }
-          .logo-svg { width: 32px !important; height: 32px !important; }
-          .logo-text span:first-child { font-size: 16px !important; letter-spacing: -0.02em !important; }
-          .logo-text span:last-child { font-size: 9px !important; letter-spacing: 0.05em !important; }
-          .mobile-hamburger { gap: 6px; }
-          .mobile-hamburger button { width: 32px !important; height: 32px !important; padding: 0 !important; }
-          .mobile-hamburger svg { width: 16px !important; height: 16px !important; }
+          .nav-desktop { display: none !important; }
+          .nav-mobile-toggle { display: flex !important; }
+          .nav-cta-desktop { display: none !important; }
         }
       `}</style>
-    </nav>
+    </>
   );
 }

@@ -1,133 +1,325 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const testimonials = [
-  { name: "Ravi Menon", role: "Business Owner", company: "Menon Traders Pvt. Ltd.", location: "Bangalore, India", rating: 5, text: "TallyPro Solutions transformed the way we handle accounting. Their Tally setup and training made our processes seamless and error-free. The support team is always just a call away! We went from chaos to clarity in just 2 weeks.", initial: "R", color: "#0066FF" },
-  { name: "Anita Nair", role: "Finance Manager", company: "Nair Exports Ltd.", location: "Mumbai, India", rating: 5, text: "We had challenges managing multiple branches, but with their Tally synchronization and remote access solutions, everything is now consolidated and secure. The GST compliance module alone saved us 20+ hours per month.", initial: "A", color: "#00D4FF" },
-  { name: "Shahid Ali", role: "Operations Head", company: "Ali Brothers Wholesale", location: "New Delhi, India", rating: 5, text: "From installation to ongoing support, the team provided excellent guidance. Our staff is more confident using Tally, thanks to the detailed training sessions. The customization for our trade-specific reports is exactly what we needed.", initial: "S", color: "#7C3AED" },
-  { name: "Priya Krishnan", role: "CFO", company: "Krishna Hospitals Group", location: "Chennai, India", rating: 5, text: "Implementing Tally for our multi-unit hospital chain seemed daunting, but TallyPro made it smooth. Their healthcare-specific customizations for billing, pharmacy inventory, and statutory compliance are outstanding.", initial: "P", color: "#22C55E" },
-  { name: "Mohammed Rafiq", role: "Managing Director", company: "Rafiq Auto Accessories", location: "Hyderabad, India", rating: 5, text: "The automobile dealer module they built for us tracks parts inventory, vehicle sales, and service records seamlessly within Tally. Best investment for our business. They truly understand industry-specific needs.", initial: "M", color: "#F59E0B" },
-  { name: "Deepa Thomas", role: "Owner", company: "Thomas Jewellers", location: "Pune, India", rating: 5, text: "Running a jewellery business requires precise weight tracking, purity management, and GST compliance. TallyPro's gold jewellery module handles everything perfectly. Their AMC support is always prompt and professional.", initial: "D", color: "#EC4899" },
+  {
+    name: "Priya M.",
+    role: "Corporate Executive",
+    rating: 5,
+    text: "Working with Asuhar completely changed my relationship with my body and mind. I went from chronic fatigue to feeling genuinely energised every morning.",
+    result: "Lost 12kg & tripled energy",
+    avatar: "P",
+    color: "#3D6B4F",
+  },
+  {
+    name: "James T.",
+    role: "Entrepreneur",
+    rating: 5,
+    text: "Asuhar's science-backed methods and genuine care made this the best investment I've ever made in myself. My stress levels dropped dramatically within weeks.",
+    result: "Stress reduced by 80%",
+    avatar: "J",
+    color: "#C8914A",
+  },
+  {
+    name: "Ananya R.",
+    role: "Teacher",
+    rating: 5,
+    text: "The nutrition guidance wasn't about restriction — it was about truly nourishing myself. Three months in and my whole family notices the difference.",
+    result: "Sustainable 15kg loss",
+    avatar: "A",
+    color: "#6BA880",
+  },
+  {
+    name: "David K.",
+    role: "Physician",
+    rating: 5,
+    text: "As a doctor, I appreciated the evidence-based approach. The sleep program alone transformed my life — from 4 hours of broken sleep to 7.5 hours of deep rest.",
+    result: "Sleep improved 200%",
+    avatar: "D",
+    color: "#5B6FA8",
+  },
+  {
+    name: "Leila A.",
+    role: "New Mother",
+    rating: 5,
+    text: "Asuhar created a gentle, compassionate wellness plan that helped me rebuild my strength and confidence after postpartum without guilt. So grateful.",
+    result: "Regained confidence & vitality",
+    avatar: "L",
+    color: "#A85B6F",
+  },
+  {
+    name: "Rajan P.",
+    role: "Retired Professional",
+    rating: 5,
+    text: "At 58, I thought it was too late for major health changes. Asuhar proved me completely wrong. I now move better, eat better, and feel 20 years younger.",
+    result: "Reversed pre-diabetic markers",
+    avatar: "R",
+    color: "#3D6B4F",
+  },
+  {
+    name: "Sofia B.",
+    role: "Fitness Enthusiast",
+    rating: 5,
+    text: "I was already active but plateauing. Asuhar helped me understand the missing piece was mindset and recovery. Game-changing perspective shift.",
+    result: "Hit new performance peak",
+    avatar: "S",
+    color: "#C8914A",
+  },
+  {
+    name: "Marcus L.",
+    role: "Software Engineer",
+    rating: 5,
+    text: "As someone who sits all day, the movement and posture guidance was incredible. I went from daily back pain to feeling genuinely comfortable in my body.",
+    result: "Eliminated chronic back pain",
+    avatar: "M",
+    color: "#5B6FA8",
+  },
 ];
+
+function TestimonialCard({ t, style }: { t: typeof testimonials[0]; style?: React.CSSProperties }) {
+  return (
+    <div style={{
+      background: "var(--surface)",
+      border: "1px solid var(--border)",
+      borderRadius: "var(--radius-lg)",
+      padding: "28px",
+      minWidth: "340px",
+      maxWidth: "340px",
+      position: "relative",
+      overflow: "hidden",
+      flexShrink: 0,
+      ...style,
+    }}>
+      {/* Quote watermark */}
+      <div style={{
+        position: "absolute", top: "4px", right: "16px",
+        fontSize: "120px", color: t.color, opacity: 0.06,
+        fontFamily: "Georgia, serif", lineHeight: 1, pointerEvents: "none",
+      }}>"</div>
+
+      {/* Stars */}
+      <div style={{ display: "flex", gap: "3px", marginBottom: "14px" }}>
+        {[...Array(t.rating)].map((_, i) => (
+          <Star key={i} size={13} fill="var(--accent)" style={{ color: "var(--accent)" }} />
+        ))}
+      </div>
+
+      <Quote size={20} style={{ color: t.color, opacity: 0.5, marginBottom: "10px" }} />
+
+      <p style={{
+        fontSize: "14px", color: "var(--text-secondary)", lineHeight: 1.75,
+        fontStyle: "italic", marginBottom: "18px",
+      }}>
+        &ldquo;{t.text}&rdquo;
+      </p>
+
+      {/* Result badge */}
+      <div style={{
+        background: `${t.color}12`,
+        border: `1px solid ${t.color}30`,
+        borderRadius: "100px",
+        padding: "5px 12px",
+        fontSize: "11px",
+        fontWeight: 700,
+        color: t.color,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "4px",
+        marginBottom: "18px",
+      }}>
+        ✓ {t.result}
+      </div>
+
+      {/* Author */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: "10px",
+        borderTop: "1px solid var(--border)", paddingTop: "16px",
+      }}>
+        <div style={{
+          width: "40px", height: "40px", borderRadius: "50%",
+          background: `${t.color}20`,
+          border: `2px solid ${t.color}40`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "15px", fontWeight: 700, color: t.color,
+          fontFamily: "var(--font-cormorant), Georgia, serif",
+          flexShrink: 0,
+        }}>
+          {t.avatar}
+        </div>
+        <div>
+          <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text-primary)" }}>{t.name}</div>
+          <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>{t.role}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(testimonials.length / itemsPerPage);
-
-  const navigate = (dir: "prev" | "next") => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    const cards = document.querySelectorAll(".t-card");
-    gsap.to(cards, {
-      x: dir === "next" ? -40 : 40, opacity: 0, duration: 0.25, ease: "power2.in",
-      onComplete: () => {
-        setCurrentIndex(prev => dir === "next" ? (prev + 1) % totalPages : (prev - 1 + totalPages) % totalPages);
-        gsap.fromTo(".t-card", { x: dir === "next" ? 40 : -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power2.out", onComplete: () => setIsAnimating(false) });
-      },
-    });
-  };
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Infinite scrolling marquee — two rows, opposite directions
+    const speed = 0.5; // px per frame
+
+    let x1 = 0, x2 = 0;
+    const cardW = 340 + 20; // minWidth + gap
+    const totalW = testimonials.length * cardW;
+
+    let raf: number;
+    const animate = () => {
+      x1 -= speed;
+      x2 += speed;
+
+      if (Math.abs(x1) >= totalW) x1 = 0;
+      if (x2 >= totalW) x2 = 0;
+
+      if (row1Ref.current) row1Ref.current.style.transform = `translateX(${x1}px)`;
+      if (row2Ref.current) row2Ref.current.style.transform = `translateX(${x2}px)`;
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+
+    // Pause on hover
+    const pause = () => cancelAnimationFrame(raf);
+    const resume = () => { raf = requestAnimationFrame(animate); };
+
+    row1Ref.current?.addEventListener("mouseenter", pause);
+    row1Ref.current?.addEventListener("mouseleave", resume);
+    row2Ref.current?.addEventListener("mouseenter", pause);
+    row2Ref.current?.addEventListener("mouseleave", resume);
+
+    // Section header GSAP
     const ctx = gsap.context(() => {
-      gsap.fromTo(".t-header", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: sectionRef.current, start: "top 80%" } });
-      gsap.fromTo(".t-stat", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out", scrollTrigger: { trigger: ".t-stats", start: "top 85%" } });
-      gsap.fromTo(".t-card", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease: "power3.out", scrollTrigger: { trigger: ".t-grid", start: "top 80%" } });
+      gsap.fromTo(".testimonials-header",
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: ".testimonials-header", start: "top 80%" } }
+      );
+
+      // Stagger reveal for the marquee rows so they don't pop in abruptly
+      gsap.fromTo(row1Ref.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".testimonials-header", start: "top 60%" } }
+      );
+      gsap.fromTo(row2Ref.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, delay: 0.2, ease: "power3.out", scrollTrigger: { trigger: ".testimonials-header", start: "top 60%" } }
+      );
     }, sectionRef);
 
-    const interval = setInterval(() => navigate("next"), 6000);
-    return () => { ctx.revert(); clearInterval(interval); };
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
   }, []);
 
-  const startIdx = currentIndex * itemsPerPage;
-  const visible = testimonials.slice(startIdx, startIdx + itemsPerPage);
+  const doubled = [...testimonials, ...testimonials];
 
   return (
     <section ref={sectionRef} id="testimonials" style={{
-      padding: "100px 0", position: "relative", overflow: "hidden",
-      background: "linear-gradient(180deg,var(--surface) 0%,var(--background) 100%)",
+      paddingTop: "100px", paddingBottom: "100px",
+      position: "relative", overflow: "hidden",
+      background: "var(--surface-2)",
     }}>
-      <div className="orb orb-cyan" style={{ width: "500px", height: "500px", top: "-100px", left: "-200px", opacity: 0.12 }} />
+      <div className="orb orb-primary" style={{ width: "500px", height: "500px", top: "-100px", right: "-100px", opacity: 0.3 }} />
+      <div className="orb orb-accent" style={{ width: "400px", height: "400px", bottom: "-100px", left: "-100px", opacity: 0.25 }} />
 
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
-        {/* Header */}
-        <div className="t-header" style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div className="section-tag" style={{ marginBottom: "16px" }}><Star size={14} /> Client Stories</div>
-          <h2 style={{ fontSize: "clamp(30px,4vw,48px)", fontWeight: 900, marginBottom: "16px" }}>
-            What Our <span className="text-gradient">Clients Say</span>
-          </h2>
-          <p style={{ fontSize: "17px", color: "var(--text-secondary)", maxWidth: "520px", margin: "0 auto" }}>
-            Real stories from businesses that transformed their operations with our Tally solutions.
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="t-stats" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", marginBottom: "48px", flexWrap: "wrap" }}>
-          {[{ num: "4.9/5", label: "Average Rating", icon: "⭐" }, { num: "2000+", label: "Happy Clients", icon: "😊" }, { num: "98%", label: "Would Recommend", icon: "👍" }].map(s => (
-            <div key={s.label} className="t-stat" style={{ textAlign: "center", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: "14px", padding: "16px 28px" }}>
-              <div style={{ fontSize: "22px", fontWeight: 800, marginBottom: "4px" }}>{s.icon} {s.num}</div>
-              <div style={{ fontSize: "13px", color: "var(--text-muted)" }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Cards */}
-        <div className="t-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "24px", marginBottom: "40px" }}>
-          {visible.map((t, i) => (
-            <div key={`${currentIndex}-${i}`} className="t-card" style={{
-              background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: "20px",
-              padding: "28px", position: "relative", overflow: "hidden", transition: "border-color 0.3s ease",
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${t.color}44`; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; }}
-            >
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${t.color},transparent)` }} />
-              <Quote size={28} style={{ color: t.color, opacity: 0.25, marginBottom: "14px" }} />
-              <div style={{ display: "flex", gap: "3px", marginBottom: "14px" }}>
-                {[...Array(t.rating)].map((_, si) => <Star key={si} size={13} fill="#FFC107" style={{ color: "#FFC107" }} />)}
-              </div>
-              <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "22px", fontStyle: "italic" }}>"{t.text}"</p>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: `${t.color}22`, border: `2px solid ${t.color}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", fontWeight: 700, color: t.color, flexShrink: 0 }}>{t.initial}</div>
-                <div>
-                  <div style={{ fontSize: "15px", fontWeight: 700 }}>{t.name}</div>
-                  <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>{t.role} · {t.company}</div>
-                  <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>📍 {t.location}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Navigation */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-          <button onClick={() => navigate("prev")} style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--surface-2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--text-secondary)", transition: "all 0.2s ease" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--primary)"; el.style.color = "var(--text-primary)"; }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--border)"; el.style.color = "var(--text-secondary)"; }}
-          ><ChevronLeft size={18} /></button>
-          <div style={{ display: "flex", gap: "8px" }}>
-            {[...Array(totalPages)].map((_, i) => (
-              <div key={i} onClick={() => setCurrentIndex(i)} style={{ width: i === currentIndex ? "24px" : "8px", height: "8px", borderRadius: "4px", background: i === currentIndex ? "var(--primary)" : "var(--border)", cursor: "pointer", transition: "all 0.3s ease" }} />
-            ))}
+      {/* Header */}
+      <div className="container" style={{ position: "relative", zIndex: 1, marginBottom: "64px" }}>
+        <div className="testimonials-header" style={{ textAlign: "center" }}>
+          <div className="section-tag" style={{ marginBottom: "20px" }}>
+            <Star size={12} fill="currentColor" /> Real Transformations
           </div>
-          <button onClick={() => navigate("next")} style={{ width: "44px", height: "44px", borderRadius: "50%", background: "var(--surface-2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--text-secondary)", transition: "all 0.2s ease" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--primary)"; el.style.color = "var(--text-primary)"; }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--border)"; el.style.color = "var(--text-secondary)"; }}
-          ><ChevronRight size={18} /></button>
+          <h2 className="font-display" style={{
+            fontSize: "clamp(34px, 4.5vw, 62px)", fontWeight: 700,
+            lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "20px",
+          }}>
+            Real People,<br /><span className="text-gradient">Real Results</span>
+          </h2>
+          <p style={{ fontSize: "17px", color: "var(--text-secondary)", maxWidth: "520px", margin: "0 auto 32px" }}>
+            The most rewarding part of my work is witnessing authentic transformations. Here&apos;s what clients say.
+          </p>
+
+          {/* Overall rating */}
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: "16px",
+            background: "var(--surface)", border: "1px solid var(--border)",
+            borderRadius: "100px", padding: "12px 28px",
+          }}>
+            <div style={{ display: "flex", gap: "4px" }}>
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={16} fill="var(--accent)" style={{ color: "var(--accent)" }} />
+              ))}
+            </div>
+            <span style={{ fontSize: "17px", fontWeight: 700, color: "var(--text-primary)" }}>4.9/5</span>
+            <div style={{ width: "1px", height: "18px", background: "var(--border)" }} />
+            <span style={{ fontSize: "14px", color: "var(--text-muted)" }}>Based on 500+ reviews</span>
+          </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @media (max-width: 900px) { .t-grid { grid-template-columns: 1fr !important; } }
-      `}</style>
+      {/* ── Marquee Row 1 (left) ── */}
+      <div style={{ overflow: "hidden", marginBottom: "20px", position: "relative", zIndex: 1 }}>
+        {/* Fade edges */}
+        <div style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: "120px",
+          background: "linear-gradient(to right, var(--surface-2), transparent)",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: "120px",
+          background: "linear-gradient(to left, var(--surface-2), transparent)",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+        <div
+          ref={row1Ref}
+          style={{
+            display: "flex", gap: "20px",
+            willChange: "transform",
+          }}
+        >
+          {doubled.map((t, i) => (
+            <TestimonialCard key={i} t={t} />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Marquee Row 2 (right) ── */}
+      <div style={{ overflow: "hidden", position: "relative", zIndex: 1 }}>
+        <div style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: "120px",
+          background: "linear-gradient(to right, var(--surface-2), transparent)",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: "120px",
+          background: "linear-gradient(to left, var(--surface-2), transparent)",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+        <div
+          ref={row2Ref}
+          style={{
+            display: "flex", gap: "20px",
+            willChange: "transform",
+            transform: `translateX(-${(testimonials.length * (340 + 20)) / 2}px)`,
+          }}
+        >
+          {doubled.map((t, i) => (
+            <TestimonialCard key={i} t={t} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
