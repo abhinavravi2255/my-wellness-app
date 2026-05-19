@@ -173,8 +173,7 @@ export default function Testimonials() {
     const speed = 0.5; // px per frame
 
     let x1 = 0, x2 = 0;
-    const cardW = 340 + 20; // minWidth + gap
-    const totalW = testimonials.length * cardW;
+    const totalW = testimonials.length * (340 + 20);
 
     let raf: number;
     const animate = () => {
@@ -185,19 +184,24 @@ export default function Testimonials() {
       if (x2 >= totalW) x2 = 0;
 
       if (row1Ref.current) row1Ref.current.style.transform = `translateX(${x1}px)`;
-      if (row2Ref.current) row2Ref.current.style.transform = `translateX(${x2}px)`;
+      if (row2Ref.current) row2Ref.current.style.transform = `translateX(-${totalW - x2}px)`;
       raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
 
-    // Pause on hover
     const pause = () => cancelAnimationFrame(raf);
-    const resume = () => { raf = requestAnimationFrame(animate); };
+    const resume = () => { 
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(animate); 
+    };
 
-    row1Ref.current?.addEventListener("mouseenter", pause);
-    row1Ref.current?.addEventListener("mouseleave", resume);
-    row2Ref.current?.addEventListener("mouseenter", pause);
-    row2Ref.current?.addEventListener("mouseleave", resume);
+    const r1 = row1Ref.current;
+    const r2 = row2Ref.current;
+
+    r1?.addEventListener("mouseenter", pause);
+    r1?.addEventListener("mouseleave", resume);
+    r2?.addEventListener("mouseenter", pause);
+    r2?.addEventListener("mouseleave", resume);
 
     // Section header GSAP
     const ctx = gsap.context(() => {
@@ -221,6 +225,10 @@ export default function Testimonials() {
     return () => {
       cancelAnimationFrame(raf);
       ctx.revert();
+      r1?.removeEventListener("mouseenter", pause);
+      r1?.removeEventListener("mouseleave", resume);
+      r2?.removeEventListener("mouseenter", pause);
+      r2?.removeEventListener("mouseleave", resume);
     };
   }, []);
 
