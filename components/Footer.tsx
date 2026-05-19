@@ -256,6 +256,7 @@ export default function Footer() {
           footer .container > div:first-child > div:last-child { flex-direction: column; width: 100%; }
           footer .container > div:first-child > div:last-child input { min-width: unset; width: 100%; }
           footer .container > div:first-child > div:last-child button { width: 100%; justify-content: center; }
+          footer { padding-bottom: 80px !important; }
         }
       `}</style>
     </footer>

@@ -348,24 +348,25 @@ export default function FloatingActions() {
         <ChevronsUp size={18} style={{ color: "var(--primary)", position: "relative", zIndex: 1 }} />
       </button>
 
-      {/* Mobile call button */}
-      <a
-        href="tel:+18009355637"
-        style={{
-          position: "fixed", bottom: "90px", left: "24px",
-          display: "none",
-          alignItems: "center", gap: "8px",
-          background: "var(--gradient-primary)",
-          borderRadius: "100px", padding: "12px 20px",
-          textDecoration: "none", color: "white",
-          fontWeight: 700, fontSize: "14px",
-          zIndex: 999,
-          boxShadow: "0 4px 20px var(--primary-glow)",
-        }}
-        className="mobile-call-btn"
-      >
-        <Phone size={16} /> Call Now
-      </a>
+      {/* Mobile action buttons container */}
+      <div className="mobile-actions" style={{
+        position: "fixed", bottom: "90px", left: "24px",
+        display: "none", alignItems: "center", gap: "10px", zIndex: 999,
+      }}>
+        <a
+          href="tel:9876543210"
+          style={{
+            display: "flex", alignItems: "center", gap: "8px",
+            background: "var(--gradient-primary)",
+            borderRadius: "100px", padding: "12px 20px",
+            textDecoration: "none", color: "white",
+            fontWeight: 700, fontSize: "14px",
+            boxShadow: "0 4px 20px var(--primary-glow)",
+          }}
+        >
+          <Phone size={16} /> Call Now
+        </a>
+      </div>
 
       <style>{`
         @keyframes chat-pulse {
@@ -374,7 +375,7 @@ export default function FloatingActions() {
           100% { transform: scale(1.5); opacity: 0; }
         }
         @media (max-width: 768px) {
-          .mobile-call-btn { display: flex !important; }
+          .mobile-actions { display: flex !important; }
         }
       `}</style>
     </>
