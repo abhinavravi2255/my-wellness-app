@@ -2,7 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Globe } from "lucide-react";
+
+const MWLogo = ({ size = 20, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 20V7l5 6 5-6v13" />
+    <path d="M12 4v13l5-6 5 6V4" />
+  </svg>
+);
 
 export default function Preloader() {
   const preloaderRef = useRef<HTMLDivElement>(null);
@@ -55,7 +61,7 @@ export default function Preloader() {
           display: "flex", alignItems: "center", justifyContent: "center",
           boxShadow: "var(--shadow-glow)",
         }}>
-          <Globe size={36} style={{ color: "white" }} />
+          <MWLogo size={36} color="white" />
         </div>
 
         <div className="preloader-text" style={{ textAlign: "center" }}>
