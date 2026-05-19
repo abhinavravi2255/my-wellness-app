@@ -194,6 +194,68 @@ html[data-theme="neon"].dark {
   --glass-strong-bg: rgba(4, 20, 30, 0.92);
 }
 
+[data-theme="gold"] {
+  /* ═══ GOLDEN PREMIUM — Rich Gold × Deep Onyx ═══ */
+  --background: #FCFBF8;
+  --foreground: #1A1612;
+  --primary: #D4AF37;
+  --primary-dark: #AA8C2C;
+  --primary-light: #F3E5AB;
+  --accent: #E5C158;
+  --accent-light: #F9E596;
+  --accent-glow: rgba(229, 193, 88, 0.25);
+  --primary-glow: rgba(212, 175, 55, 0.15);
+  --grid-line: rgba(212, 175, 55, 0.08);
+  --surface: #FFFFFF;
+  --surface-2: #F9F7F1;
+  --surface-3: #F0EAD6;
+  --border: rgba(26, 22, 18, 0.08);
+  --border-active: rgba(212, 175, 55, 0.4);
+  --text-primary: #1A1612;
+  --text-secondary: #332B22;
+  --text-muted: #8C7B6B;
+  --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 100%);
+  --gradient-accent: linear-gradient(135deg, #E5C158 0%, #F9E596 100%);
+  --gradient-surface: linear-gradient(135deg, #FFFFFF 0%, #FCFBF8 100%);
+  --gradient-hero: linear-gradient(160deg, #FCFBF8 0%, #F9F7F1 50%, #F4EEDF 100%);
+  --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.15);
+  --shadow-card: 0 4px 32px rgba(26, 22, 18, 0.06);
+  --shadow-deep: 0 20px 60px rgba(26, 22, 18, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-strong-bg: rgba(255, 255, 255, 0.92);
+}
+
+html[data-theme="gold"].dark {
+  /* ═══ GOLDEN PREMIUM DARK — Obsidian × Liquid Gold ═══ */
+  --background: #0D0B0A;
+  --foreground: #F4EEDF;
+  --primary: #E5C158;
+  --primary-dark: #D4AF37;
+  --primary-light: #F9E596;
+  --accent: #D4AF37;
+  --accent-light: #F3E5AB;
+  --accent-glow: rgba(212, 175, 55, 0.25);
+  --primary-glow: rgba(229, 193, 88, 0.2);
+  --grid-line: rgba(229, 193, 88, 0.06);
+  --surface: #141210;
+  --surface-2: #1F1B18;
+  --surface-3: #2A2521;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(229, 193, 88, 0.45);
+  --text-primary: #F4EEDF;
+  --text-secondary: #D9D0BD;
+  --text-muted: #8C7B6B;
+  --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #E5C158 100%);
+  --gradient-accent: linear-gradient(135deg, #E5C158 0%, #F9E596 100%);
+  --gradient-surface: linear-gradient(135deg, #141210 0%, #1F1B18 100%);
+  --gradient-hero: linear-gradient(160deg, #0D0B0A 0%, #141210 50%, #1A1714 100%);
+  --shadow-glow: 0 0 60px rgba(229, 193, 88, 0.25);
+  --shadow-card: 0 4px 32px rgba(0, 0, 0, 0.5);
+  --shadow-deep: 0 20px 80px rgba(0, 0, 0, 0.7);
+  --glass-bg: rgba(20, 18, 16, 0.65);
+  --glass-strong-bg: rgba(20, 18, 16, 0.92);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

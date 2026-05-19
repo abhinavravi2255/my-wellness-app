@@ -47,7 +47,7 @@ export default function Navbar() {
 
   // ── Color Theme toggle ──
   const toggleColorTheme = () => {
-    const themes = ["green", "violet", "neon"];
+    const themes = ["green", "violet", "neon", "gold"];
     const currentIndex = themes.indexOf(colorTheme);
     const newColor = themes[(currentIndex + 1) % themes.length] || "green";
     setColorTheme(newColor);
@@ -315,12 +315,12 @@ export default function Navbar() {
             {mounted && (
               <button
                 onClick={toggleColorTheme}
-                title={`Switch to ${colorTheme === "green" ? "Celestial Violet" : colorTheme === "violet" ? "Electric Neon" : "Earth Green"} Theme`}
+                title={`Switch to ${colorTheme === "green" ? "Celestial Violet" : colorTheme === "violet" ? "Electric Neon" : colorTheme === "neon" ? "Golden Premium" : "Earth Green"} Theme`}
                 style={{
                   width: "38px", height: "38px", borderRadius: "50%",
                   border: "1.5px solid var(--border)",
                   background: "var(--surface-2)",
-                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F", // Show next color as hint
+                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : colorTheme === "neon" ? "#D4AF37" : "#3D6B4F", // Show next color as hint
                   display: "flex", alignItems: "center", justifyContent: "center",
                   cursor: "pointer", transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
                   flexShrink: 0,
@@ -334,7 +334,7 @@ export default function Navbar() {
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = "var(--border)";
                   e.currentTarget.style.background = "var(--surface-2)";
-                  e.currentTarget.style.color = colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F";
+                  e.currentTarget.style.color = colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : colorTheme === "neon" ? "#D4AF37" : "#3D6B4F";
                   gsap.to(e.currentTarget, { rotate: 0, scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)" });
                 }}
               >
@@ -478,13 +478,13 @@ export default function Navbar() {
                   flex: 1, padding: "12px", minWidth: "45%",
                   background: "var(--surface-2)", border: "1px solid var(--border)",
                   borderRadius: "100px", cursor: "pointer",
-                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : "#3D6B4F",
+                  color: colorTheme === "green" ? "#7C3AED" : colorTheme === "violet" ? "#00B4D8" : colorTheme === "neon" ? "#D4AF37" : "#3D6B4F",
                   fontSize: "14px", fontWeight: 600,
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                   fontFamily: "inherit",
                 }}
               >
-                <Palette size={16} /> {colorTheme === "green" ? "Violet Theme" : colorTheme === "violet" ? "Neon Theme" : "Green Theme"}
+                <Palette size={16} /> {colorTheme === "green" ? "Violet Theme" : colorTheme === "violet" ? "Neon Theme" : colorTheme === "neon" ? "Gold Theme" : "Green Theme"}
               </button>
             )}
             {mounted && (

@@ -143,7 +143,7 @@ export default function Services() {
                     boxShadow: "var(--shadow-card)", zIndex: 1,
                   }}>
                     <Image
-                      src="/asuhar-portrait.png"
+                      src="/asuhar-new.jpeg"
                       alt="Coach Asuhar B"
                       fill
                       style={{ objectFit: "cover" }}

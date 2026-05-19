@@ -248,7 +248,7 @@ export default function Contact() {
                   flexShrink: 0, position: "relative",
                 }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/asuhar-portrait.png" alt="Asuhar B" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src="/asuhar-new.jpeg" alt="Asuhar B" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <div>
                   <div style={{ fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "18px" }}>Asuhar B</div>
