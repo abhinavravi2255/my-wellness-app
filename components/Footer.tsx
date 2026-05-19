@@ -3,7 +3,14 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Leaf, Heart, Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Leaf, Heart, Mail, Phone, MapPin } from "lucide-react";
+
+const MWLogo = ({ size = 20, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 20V7l5 6 5-6v13" />
+    <path d="M12 4v13l5-6 5 6V4" />
+  </svg>
+);
 import WeatherWidget from "./WeatherWidget";
 
 if (typeof window !== "undefined") {
@@ -143,7 +150,7 @@ export default function Footer() {
                 background: "var(--gradient-primary)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <Globe size={20} style={{ color: "white" }} />
+                <MWLogo size={20} color="white" />
               </div>
               <div>
                 <div style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "22px", fontWeight: 700, color: "var(--text-primary)" }}>

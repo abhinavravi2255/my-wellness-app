@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { Leaf, Menu, X, ArrowRight, Sun, Moon, ChevronRight, Globe, Palette } from "lucide-react";
+import { Leaf, Menu, X, ArrowRight, Sun, Moon, ChevronRight, Palette } from "lucide-react";
+
+const MWLogo = ({ size = 20, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 20V7l5 6 5-6v13" />
+    <path d="M12 4v13l5-6 5 6V4" />
+  </svg>
+);
 
 const navLinks = [
   { label: "Home", href: "#home", icon: "🏠" },
@@ -188,7 +195,7 @@ export default function Navbar() {
                   gsap.to(e.currentTarget, { rotate: 0, scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" });
                 }}
               >
-                <Globe size={19} style={{ color: "white" }} />
+                <MWLogo size={19} color="white" />
               </div>
               {/* Pulse ring */}
               <div style={{
@@ -391,7 +398,7 @@ export default function Navbar() {
               background: "var(--gradient-primary)",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <Globe size={16} style={{ color: "white" }} />
+              <MWLogo size={16} color="white" />
             </div>
             <span style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "18px", fontWeight: 700, color: "var(--text-primary)" }}>
               Mission 444
