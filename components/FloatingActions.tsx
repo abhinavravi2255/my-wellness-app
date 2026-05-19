@@ -33,25 +33,46 @@ function AIChatBubble({ open, onClose }: { open: boolean; onClose: () => void })
     }
   }, [open]);
 
-  const botReplies = [
-    "I'd love to help you start your wellness journey! 🌿 Would you like to book a free discovery call?",
-    "Asuhar offers personalised coaching programs for mind, body & nutrition. Which area interests you most?",
-    "Great question! You can reach Asuhar directly at hello@asuharb.com or use the contact form below.",
-    "Transforming your lifestyle starts with one small step. Let's find the right program for you! ✨",
-  ];
-
-  const sendMessage = () => {
-    if (!inputVal.trim()) return;
-    const userMsg = inputVal.trim();
+  const handleAction = (text: string) => {
+    if (!text.trim() || typing) return;
     setInputVal("");
-    setMessages(prev => [...prev, { from: "user", text: userMsg }]);
+    setMessages(prev => [...prev, { from: "user", text }]);
     setTyping(true);
+
     setTimeout(() => {
-      const reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+      let reply = "";
+      const lower = text.toLowerCase();
+
+      if (lower.includes("about")) {
+        reply = "Asuhar is a dedicated wellness coach focused on holistic health, nutrition, and sustainable lifestyle changes. Let me scroll you to the About section! ✨";
+        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (lower.includes("program") || lower.includes("services")) {
+        reply = "We offer comprehensive wellness programs including Foundations, Transformation, and Elite Immersion. Taking you there now! 🌿";
+        document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (lower.includes("blog")) {
+        reply = "Our blog is filled with wellness tips, recipes, and success stories! (Coming very soon) 📚";
+      } else if (lower.includes("contact")) {
+        reply = "You can reach out directly via our contact form or book a free discovery call! 📞";
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        const botReplies = [
+          "I'd love to help you start your wellness journey! 🌿 Would you like to know more about our programs?",
+          "Transforming your lifestyle starts with one small step. Let's find the right program for you! ✨",
+          "I can help you navigate the site! Try asking about 'Programs', 'About', or 'Blog'."
+        ];
+        reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+      }
+
       setMessages(prev => [...prev, { from: "bot", text: reply }]);
       setTyping(false);
     }, 1200);
   };
+
+  const sendMessage = () => {
+    handleAction(inputVal);
+  };
+
+  const quickActions = ["About", "Programs", "Blog", "Contact"];
 
   if (!open) return null;
 
@@ -125,6 +146,26 @@ function AIChatBubble({ open, onClose }: { open: boolean; onClose: () => void })
             ))}
           </div>
         )}
+      </div>
+
+      {/* Quick Actions */}
+      <div style={{
+        padding: "0 14px 12px 14px", display: "flex", gap: "6px", flexWrap: "wrap", background: "var(--surface)"
+      }}>
+        {quickActions.map(action => (
+          <button key={action} onClick={() => handleAction(action)} disabled={typing} style={{
+            background: "var(--surface-2)", border: "1px solid var(--border-active)",
+            borderRadius: "100px", padding: "6px 12px", fontSize: "11px", fontWeight: 600,
+            color: "var(--text-primary)", cursor: typing ? "default" : "pointer",
+            transition: "all 0.2s ease",
+            opacity: typing ? 0.6 : 1
+          }}
+          onMouseEnter={e => !typing && (e.currentTarget.style.borderColor = "var(--primary)")}
+          onMouseLeave={e => !typing && (e.currentTarget.style.borderColor = "var(--border-active)")}
+          >
+            {action}
+          </button>
+        ))}
       </div>
 
       {/* Input */}
